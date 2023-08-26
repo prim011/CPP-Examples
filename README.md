@@ -1,12 +1,12 @@
-# Quick Reference for some C++ Example Class
+# Quick Reference for some C++ Example Classes
 
-This small code samples are composed of different C++ class topic of interest which have been organized by different folders. The folders contains a very simple structucture, normally as follow:
+These small code samples are composed of different C++ class topics of interest which have been organized by different folders. The folders contain a very simple structure, normally as follows:
 - 	main.cpp file: containing the exercise development
-- 	CMakeLists.txt: containing the isntruction on how to compile with cmake under C++11
--	README.md: short decription in marked-up file to describe the excersice and how to compile
+- 	CMakeLists.txt: containing the instructions on how to compile with cmake under C++11
+-	README.md: short description in marked-up file to describe the exercise and how to compile
 
-## Excercises 
-The folders beneeth this llevel are the following:
+## Exercises 
+The folders beneath this level are the following:
 - 	listExample	(single linked list structure, unordered)
 -	listTemplate	(same as before, but using template in C++)
 
@@ -18,11 +18,11 @@ Only for the first time run the following:
 
 `$ cmake . `
 
-Then successive build like that:
+Then successive builds like that:
 
 `$ cmake --build . `
 
-the name of the file to compile and the project are identified in the `CMakeLists.txt` file. 
+The name of the file to compile and the project are identified in the `CMakeLists.txt` file. 
 Output is the executable `myexample` generated after the build.
 
 ## Getting in touch
