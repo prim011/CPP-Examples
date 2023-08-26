@@ -6,7 +6,7 @@ Two considerations are worth mentioning:
 -	And the Insertion on the list of new elements
 
 ### The Node destructor 
-The Node’s destruction includes also all the resources associated with it; that includes pointers to other nodes in the field `next`. If a single node needs to be removed/deallocated, it is necessary to set `next = NULL;`,  *before* calling the destructor, otherwise the subsequent linked nodes will be deallocated as well, potentially compromising the list itself, if not careful.
+The Node’s destruction includes also all the resources associated with it; including pointers to other nodes in the field `next`. If a single node needs to be removed/deallocated, it is necessary to set `next = NULL;`,  *before* calling the destructor, otherwise the subsequent linked nodes will be deallocated as well, potentially compromising the list itself, if not careful.
 We thought this was a much better design when it comes to removing the entire list (i.e. calling the list destructor), instead of calling the node destructor for each node within the list destructor. In this way, we have taken advantage of the recursion inherited from the linked list as a structured object.
 
 ### Node’s Insertion and unordered linked list
@@ -27,10 +27,10 @@ Only for the first time run the following:
 
 `$ cmake . `
 
-Then successive build like that:
+Then successive builds like that:
 
 `$ cmake --build . `
 
-the name of the file to compile and the project are identified in the `CMakeLists.txt` file. 
+The name of the file to compile and the project are identified in the `CMakeLists.txt` file. 
 Output is the executable `myexample` generated after the build.
 
