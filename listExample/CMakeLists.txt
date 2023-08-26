@@ -13,3 +13,6 @@ project(MyProject
 add_executable(myexample main.cpp)
 
 set(CMAKE_BUILD_TYPE Debug)
+
+add_test(NAME listExampleTest
+           COMMAND myexample)
