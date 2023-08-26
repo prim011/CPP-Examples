@@ -8,7 +8,7 @@ using namespace std;
 /**
  * @brief Node definition in the list 
  *
- * This structure define the Nodes: the contents and the 
+ * This structure defines the Nodes: the contents of the information and the
  * pointer to the next element
  */
 class NodeCell {
@@ -50,6 +50,8 @@ public:
 
 /**
  * @brief class for the List 
+ * 
+ * 
  */
 
 class ListClass {
