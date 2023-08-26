@@ -1,4 +1,4 @@
-# Quick Reference using CMake 
+# Quick Reference for Linked List Class
 
 This quick example code creates a liked list with a well-defined node structure. The two classes involved are defined for the node structure and the object associated with the linked list.
 Two considerations are worth mentioning:
