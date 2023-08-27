@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#define MAX_LENGTH  160
+#define MAX_LENGTH  60
 
 using namespace std;
 
@@ -205,7 +205,6 @@ int main() {
 	
 	ListClass t(1,"firstJoint");
 	string st;
-	NodeCell *n;
 	
 	cout << "And this is the first class outcome :" << t <<"\n";	
 
@@ -225,7 +224,10 @@ int main() {
 		st = "##### " + to_string(i);
 		NodeCell n(i, st);
 		if ((t.searchItem (n) != NULL)) 
-			t.delNode(n);
+			if (!(t.delNode(n)))
+				exit (0);
 	}	
 	cout << "Deleted old nodes:" << t << "\n";		
+	t.~ListClass();
+	exit (1);
 }
