@@ -12,3 +12,6 @@ project(MyProject
 # Create the executable
 add_subdirectory(listExample)
 
+#enable_testing()
+
+
