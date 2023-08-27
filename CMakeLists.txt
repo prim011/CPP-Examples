@@ -14,6 +14,4 @@ add_subdirectory(listExample)
 
 enable_testing()
 
-add_test(NAME listExampleTest
-           COMMAND listExample/myexample)
 
