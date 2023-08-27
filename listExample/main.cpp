@@ -224,9 +224,9 @@ int main() {
 		NodeCell n(i, st);
 		if ((t.searchItem (n) != NULL)) 
 			if (!(t.delNode(n)))
-				exit (0);
+				return (0);
 	}	
 	cout << "Deleted old nodes:" << t << "\n";		
 	t.~ListClass();
-	exit (1);
+	return (1);
 }
