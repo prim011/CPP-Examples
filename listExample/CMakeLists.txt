@@ -14,5 +14,8 @@ add_executable(myexample main.cpp)
 
 set(CMAKE_BUILD_TYPE Debug)
 
+
+enable_testing()
+
 add_test(NAME listExampleTest
            COMMAND myexample)
