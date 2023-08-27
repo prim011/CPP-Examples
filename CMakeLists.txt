@@ -11,6 +11,7 @@ project(MyProject
 
 # Create the executable
 add_subdirectory(listExample)
+add_subdirectory(listTemplate)
 
 enable_testing()
 
