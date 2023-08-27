@@ -199,7 +199,6 @@ int main() {
 	
 	ListClass<double,string> t(1,"firstJoint");
 	string st;
-	NodeCell<double,string> *n;
 	
 	cout << "And this is the first class outcome :" << t <<"\n";	
 
@@ -219,7 +218,9 @@ int main() {
 		st = "##### " + to_string(i);
 		NodeCell<double,string> n(i, st);
 		if ((t.searchItem (n) != NULL)) 
-			t.delNode(n);
+			if (!(t.delNode(n)))
+				return (1);   // fail the test 
 	}	
 	cout << "Deleted old nodes:" << t << "\n";		
+	return (0);   // test passed
 }

@@ -10,6 +10,11 @@ project(MyProject
 )
 
 # Create the executable
-add_executable(myexample main.cpp)
+add_executable(myTempExample main.cpp)
 
 set(CMAKE_BUILD_TYPE Debug)
+
+enable_testing()
+
+add_test(NAME listTemplateleTest
+            COMMAND myTempExample)
