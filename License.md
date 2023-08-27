@@ -4,4 +4,4 @@
 This software product is available under opensource licensing model. Please see the relevant section below for information on which Open Source license do apply
 
 ### Open Source 
-This software is free software downloads and may be modified to the needs of the user according to the _Individual  CLA_ document and as long as the user adheres to [AGPL 3.0](https://www.gnu.org/licenses/agpl-3.0.en.html) 
+This software is free software downloads and may be modified to the needs of the user according to the [Individual  CLA](<./Individual CLA.md>) document and as long as the user adheres to [AGPL 3.0](https://www.gnu.org/licenses/agpl-3.0.en.html) 
