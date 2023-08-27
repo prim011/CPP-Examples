@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#define MAX_LENGTH  60
+#define MAX_LENGTH  160
 
 using namespace std;
 
