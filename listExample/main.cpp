@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#define MAX_LENGTH  60
+#define MAX_LENGTH  160
 
 using namespace std;
 
@@ -145,7 +145,7 @@ NodeCell* ListClass::searchItem (NodeCell& n) {
  * according to the index value.
  *
  * @param the node to be included
- * @return diagnastic if the insertion was succesfull (true)
+ * @return diagnastic if the deletion was succesfull (true)
  */
 bool ListClass::delNode (NodeCell &n) {
 	NodeCell *c;
@@ -208,7 +208,6 @@ int main() {
 	
 	cout << "And this is the first class outcome :" << t <<"\n";	
 
-
 	for (int i = 2; i <= MAX_LENGTH; i++)
 	{
 		st = "Joint Name # " + to_string(i);
@@ -225,9 +224,8 @@ int main() {
 		NodeCell n(i, st);
 		if ((t.searchItem (n) != NULL)) 
 			if (!(t.delNode(n)))
-				exit (0);
+				return (1);  // fail the regression test 
 	}	
 	cout << "Deleted old nodes:" << t << "\n";		
-	t.~ListClass();
-	exit (1);
+	return (0); // all good!
 }
