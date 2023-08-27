@@ -227,6 +227,6 @@ int main() {
 				exit (0);
 	}	
 	cout << "Deleted old nodes:" << t << "\n";		
-	t.~ListCLass();
+	t.~ListClass();
 	exit (1);
 }
