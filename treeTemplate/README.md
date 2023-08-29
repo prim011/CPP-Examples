@@ -1,10 +1,10 @@
-# Quick Reference for Template Linked List Class
+# Quick Reference for Template Binary Tree Class
 
-This quick example code differs from the traditional linked list, explained in other folders, because of the variable structure of the node. Now the user can define the node completely independently at run time. This has been made possible thanks to the template  definitions in C++ 
+This quick example code implements the Binary Tree in a Template format to accept any type of node structure. The user can define the node completely independently at run time. The only constrain is related to the implicit need for the _index_ field to satify some ordering, typically with the overload of the '< > = '. This has been made possible thanks to the template  definitions in C++ 
 
-The two Template classes have now been defined based on the old Linked Class. The migration of those has been pretty straightforward and the flexibility gained is apparent in the `main()` function when the list is utilized with a different node structure as it was originally created. Two considerations are worth mentioning:
+The two Template classes, one for the node and one for the tree itself, have now been defined based on the binary tree data structure. The migration of those has been pretty straightforward and the flexibility gained is apparent in the `main()` function when the tree is utilized with a different node structure as it was originally created. Two considerations are worth mentioning:
 -	The Node destructor
--	And the Insertion on the list of new elements
+-	And the deletion of one element from the tree
 
 ### The Node destructor 
 The Node’s destruction includes also all the resources associated with it; including pointers to other nodes in the field `next`. If a single node needs to be removed/deallocated, it is necessary to set `next = NULL;`,  *before* calling the destructor, otherwise the subsequent linked nodes will be deallocated as well, potentially compromising the list itself, if not careful.
