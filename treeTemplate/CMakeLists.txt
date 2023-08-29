@@ -10,11 +10,11 @@ project(MyProject
 )
 
 # Create the executable
-add_executable(myTempExample main.cpp)
+add_executable(myTreeTempExample main.cpp)
 
 set(CMAKE_BUILD_TYPE Debug)
 
 enable_testing()
 
 add_test(NAME treeTemplateleTest
-            COMMAND myTempExample)
+            COMMAND myTreeTempExample)
