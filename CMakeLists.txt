@@ -12,6 +12,7 @@ project(MyProject
 # Create the executable
 add_subdirectory(listExample)
 add_subdirectory(listTemplate)
+add_subdirectory(treeTemplate)
 
 enable_testing()
 
