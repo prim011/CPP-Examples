@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#define MAX_LENGTH  60
+#define MAX_LENGTH  1060
 
 using namespace std;
 
@@ -33,6 +33,7 @@ public:
    	  	jointName.~S();
 	}
 	
+	NodeCell& changeIndex (I i) { index = i; return *this; }
 	bool operator< (const NodeCell &n) { return (index < n.index); }
 	bool operator<= (const NodeCell &n) { return (index <= n.index); }
 	bool operator== (const NodeCell &n) { return (index == n.index); }
@@ -134,7 +135,7 @@ bool ListClass<I,S>::insertNew (NodeCell<I,S> &n) {
  * This function searches one node in the list,
  * according to the index value.
  *
- * @param the node to be included
+ * @param the node to be searched
  * @return a node pointer the the element or NULL is not founded
  */
 template <class I, class S>
@@ -156,8 +157,8 @@ NodeCell<I,S>* ListClass<I,S>::searchItem (NodeCell<I,S> & n) {
  * This function deletes one node in the list,
  * according to the index value.
  *
- * @param the node to be included
- * @return diagnastic if the insertion was succesfull (true)
+ * @param the node to be deleted
+ * @return diagnastic if the deletion was succesfull (true)
  */
 template <class I, class S>
 bool ListClass<I,S>::delNode (NodeCell<I,S> &n) {
@@ -196,31 +197,29 @@ bool ListClass<I,S>::delNode (NodeCell<I,S> &n) {
 
 int main() {
 	cout << "Let's start with the Program Exection \n\n";
-	
+
+/////////// Creation of the List	
 	ListClass<double,string> t(1,"firstJoint");
-	string st;
 	
 	cout << "And this is the first class outcome :" << t <<"\n";	
 
+/////////// Insertion of new Nodes - Test Case
+	NodeCell<double,string> n(0, "Joint Name ");
 
 	for (int i = 2; i <= MAX_LENGTH; i++)
-	{
-		st = "Joint Name # " + to_string(i);
-		NodeCell<double,string> n(i, st);
-		if (!(t.insertNew (n)) )
-			cout << "\n Error on inserting node :" << i << endl;
-	}	
+		if (!(t.insertNew (n.changeIndex(i))) )
+			return (1);   // fail the test 
 	
 	cout << "Added new nodes:" << t << "\n";
 	
+/////////// Search and Deletion of new Nodes - Test Case	
 	for (int i = 3; i <= MAX_LENGTH; i++)
-	{
-		st = "##### " + to_string(i);
-		NodeCell<double,string> n(i, st);
-		if ((t.searchItem (n) != NULL)) 
-			if (!(t.delNode(n)))
+		if ((t.searchItem (n.changeIndex(i)) != NULL)) 
+			if (!(t.delNode(n.changeIndex(i))))
 				return (1);   // fail the test 
-	}	
+					
 	cout << "Deleted old nodes:" << t << "\n";		
+
+/////////// Program closure - RegTest passed
 	return (0);   // test passed
 }
