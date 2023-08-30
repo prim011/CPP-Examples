@@ -8,11 +8,11 @@ using namespace std;
 /**
  * @brief Node definition in the list 
  *
- * This structure define the Nodes: the contents and the 
+ * This structure defines the Nodes: the contents and the 
  * pointers to the left and right elements
  * 
  * Comparing two different Nodes is done over the field index.
- * Therefore implicetly the class will have to those operators
+ * Therefore implicitly the class will have those operators
  * overloaded.
  */
 template <class I, class S>
@@ -24,14 +24,14 @@ public:
 	NodeCell* sx;		// a link to the left element.
 	// default constructor
 	NodeCell () {index = 0; sx = dx = NULL;}   
-	// initialization contructor 
+	// initialization constructor 
 	NodeCell (I i, S s):index(i), jointName(s) {dx=sx=NULL;}
-	// copy constractor
+	// copy constructor
 	NodeCell (const NodeCell& n):
 		index(n.index),
 		jointName(n.jointName)
 		{ sx = n.sx; dx = n.dx; }
-	// destructor: it release all resources linked to it! 
+	// destructor: It releases all resources linked to it! 
 	// set "sx and dx to NULL if you do not want to remove the rest of the nodes
 	~NodeCell() {
 	   	if(sx)           
@@ -68,12 +68,9 @@ public:
 		 	
 
 /**
- * @brief class for the ninary tree data structure 
+ * @brief class for the binary tree data structure 
  *
- * This class will have a pointer to the tree, root, and 
- * the number of levels in the the tree, lvls. This last
- * field may not be completely necessary, but it can be used 
- * to control better the tree's trversing.
+ * This class will have a pointer to the tree, root, and includes the NodeClass.
  */
 template <class I, class S>
 class TreeClass {
@@ -137,8 +134,9 @@ void TreeClass<I,S>::traverse (ostream& os, NodeCell<I,S> *p) {
 } 
 
 /**
- * @brief Insert one element in the list
- * This function inserts one node in the list, at the last position.
+ * @brief Insert one element in the tree
+ *
+ * This function inserts one node in the tree, in an inorder manner.
  *
  * @param the node to be included
  * @return diagnastic if the insertion was succesfull (true)
@@ -210,12 +208,13 @@ void TreeClass<I,S>::searchNode (NodeCell<I,S>& n, NodeCell<I,S>* p, NodeCell<I,
 
 
 /**
- * @brief search of a gine node in the list
- * This function searches one node in the list,
+ * @brief search of a given node in the tree
+ *
+ * This function searches one node in the tree,
  * according to the index value.
  *
- * @param the node to be included
- * @return a node pointer the the element or NULL is not founded
+ * @param the node to be searched
+ * @return a node pointer the element or NULL is not found
  */
 template <class I, class S>
 NodeCell<I,S>* TreeClass<I,S>::searchItem (NodeCell<I,S> & n) {
@@ -233,14 +232,14 @@ NodeCell<I,S>* TreeClass<I,S>::searchItem (NodeCell<I,S> & n) {
 }
 
 /**
- * @brief search of the predecessor of a given node in the tree
+ * @brief Returns the minimum in a given tree branch
  
- * This function searches the predecessor of a given node in the tree,
+ * This function searches the minimum of a given branch in the tree,
  * according to the index value. Assumption is that nodes belongs to 
  * the tree
  *
- * @param the node to be searched
- * @return a node pointer the element or NULL is not founded
+ * @param the branch tree to start the search from
+ * @return a node pointer the element or NULL if not found
  */
 template <class I, class S>
 NodeCell<I,S>* TreeClass<I,S>::minimum(NodeCell<I,S>* p) {
