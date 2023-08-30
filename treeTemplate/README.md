@@ -12,11 +12,11 @@ The Node’s destruction includes also all the resources associated with it; inc
 We thought this was a much better design when it comes to removing the entire tree (i.e. calling the tree destructor), instead of calling the node destructor for each node within the tree destructor. In this way, we have taken advantage of the recursion inherited from the binary tree as a structured object.
 
 ### New Node's insertion is always in order
-The `insertNew()` member function is straightforward, at least compared with the others. The insertion happens inorder (i.e. navigating the tree from the left-most side branch, first; then from the right-most side). That has also the nice effect of keeping the node ordered according to the _index_ value in the node.
+The `insertNew()` member function is straightforward, at least compared with the others. The insertion happens inorder (i.e. navigating the tree from the left-most side branch, first; then from the right-most side). That has also the nice effect of keeping the tree ordered according to the _index_ value in the node.
 
 
 ### Node’s deletion
-The function design aims for simplicity and uses recursion to first find the match with the node we want to delete. Later, when a correct match was found, great care was been given to preserve the branch beneath and the inherited inorder structure of the tree. The problem typically arises when the node to be removed is *not* in a leaf position.
+The function's design aims for simplicity and uses recursion to first find the match with the node we want to delete. Later, when a correct match was found, great care was been given to preserve the branch beneath and the inherited inorder structure of the tree. The problem typically arises when the node to be removed is *not* in a leaf position.
 
 
 
