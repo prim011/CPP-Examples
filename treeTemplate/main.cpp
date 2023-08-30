@@ -265,6 +265,17 @@ NodeCell<I,S>* TreeClass<I,S>::maximum(NodeCell<I,S>* p) {
         return current;
     }
 
+/**
+ * @brief Support routine for the delNode() method
+ * 
+ * This function relinks the pointers in the tree, once the deletion 
+ * node has been identified. It does also call the delete function 
+ * for the node itself, after it has been isolated from the tree.
+ *
+ * @param the node to be removed (the _morituri_ node)
+ * @param the branch tree beneath the morituri node
+ * @return N/A
+ */
 template <class I, class S>
 void TreeClass<I,S>::relinkLeft(NodeCell<I,S> &n, NodeCell<I,S>* p) {
 
@@ -291,6 +302,18 @@ void TreeClass<I,S>::relinkLeft(NodeCell<I,S> &n, NodeCell<I,S>* p) {
         delete (t);			// 6th step 
 }
 
+/**
+ * @brief Support routine for the delNode() method
+ * 
+ * This function identifies the node to be removed, first, by using a recursion 
+ * method. Then it calls the relinkLeft/Right() to relink the child nodes 
+ * Beneath the morituri node. This is of relevance especially if the morituri node
+ * is not a leaf. The actual delete funtion is called in the relinkLeft/Right()   
+ *
+ * @param the node to be removed (the _morituri_ node)
+ * @param the branch tree beneath the morituri node
+ * @return N/A
+ */
 template <class I, class S>
 void TreeClass<I,S>::deletenode (NodeCell<I,S>& n, NodeCell<I,S> *p) {
       
