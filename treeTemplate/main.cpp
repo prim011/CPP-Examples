@@ -6,7 +6,7 @@
 using namespace std;
 
 /**
- * @brief Node definition in the list 
+ * @brief Node definition in the tree 
  *
  * This structure defines the Nodes: the contents and the 
  * pointers to the left and right elements
@@ -86,10 +86,12 @@ private:
 	NodeCell<I,S>* maximum(NodeCell<I,S>*);			
 			// service funtion to find the maximum in a branch tree
 	void relinkLeft(NodeCell<I,S> &, NodeCell<I,S>* );
-			// service function for relink during deletion
+	void relinkRight(NodeCell<I,S> &, NodeCell<I,S>* );
+			// service functions for relink during deletion
 	void deletenode (NodeCell<I,S>&, NodeCell<I,S>* );
 			// service function to delete a node
-	void searchNode (NodeCell<I,S>&, NodeCell<I,S>*, NodeCell<I,S>* );	
+	void searchNode (NodeCell<I,S>&, NodeCell<I,S>*, NodeCell<I,S>* );
+			// service function to search for a node	
 				
 
 public:
@@ -271,6 +273,30 @@ NodeCell<I,S>* TreeClass<I,S>::maximum(NodeCell<I,S>* p) {
  * This function relinks the pointers in the tree, once the deletion 
  * node has been identified. It does also call the delete function 
  * for the node itself, after it has been isolated from the tree.
+ * Here are the six steps performed in the example of a right branch
+ *
+ *	     500 ----+                  1.  Relink Anchestor's node 
+ * morituri    \     |  1.                   to chil's node
+ *   Node  --> 600   |                  2.  Remove (to NULL) Node's dx
+ *           5./ \2. /                  3.  Relink child's node sx
+ *	     550---650                        to Node's sx
+ *	     / \ 3. / \                  4.  Relink Maximum in 
+ *        548 552  648 652                    Node's sx branch to 
+ *              |   |                         Minimum in Node's dx branch 
+ *              +---+                    5.  Remove (to NULL) Node's sx
+ *                4.                     6.  Now Node is fully isolated
+ *                                            if is safe to Delete Node
+ * After these six operations the tree will look like:
+ *     
+ *     500                 500
+ *       \                   \
+ *       600        -->      650
+ *       / \        -->      / \
+ *    550   650     -->   550   652
+ *    / \    / \          / \
+ *  548 552 648 652     540  552
+ *                            \
+ *                             648
  *
  * @param the node to be removed (the _morituri_ node)
  * @param the branch tree beneath the morituri node
@@ -302,6 +328,33 @@ void TreeClass<I,S>::relinkLeft(NodeCell<I,S> &n, NodeCell<I,S>* p) {
         delete (t);			// 6th step 
 }
 
+
+template <class I, class S>
+void TreeClass<I,S>::relinkRight(NodeCell<I,S> &n, NodeCell<I,S>* p) {
+
+	if ( n != *(p->sx) )		// we are working on the left branch of p
+		return;
+
+        NodeCell<I,S>* t=p->sx;	// pointing to the node to remove
+        cout << "node to be removed: " << *t << endl; 
+        cout << "current node :" << *p << endl;
+        p->sx = p->sx->sx;		// 1st step
+        cout << "1st step done \n";
+        NodeCell<I,S>* temp;
+        temp = minimum(t->dx);          
+        t->sx = NULL;			// 2nd step 
+        if (p->sx != NULL)		
+        	p->sx->dx = t->dx;	// 3th step
+        cout << "step 3. finished \n";
+        cout << "min : " << temp << endl;
+        NodeCell<I,S>* k = maximum(t->sx);
+        cout << "max : " << k << endl;
+        if (k != NULL) 
+        	k->dx = temp;		// 4th step
+        t->dx = NULL;			// 5th step
+        delete (t);			// 6th step 
+}
+
 /**
  * @brief Support routine for the delNode() method
  * 
@@ -321,12 +374,7 @@ void TreeClass<I,S>::deletenode (NodeCell<I,S>& n, NodeCell<I,S> *p) {
              cout << "node found :" << p << endl;      
         if (n == *(p->sx)) {
           cout << "... on the sx branch\n";
-          NodeCell<I,S>* t=p->sx;	// pointing to the node to remove
-          p->sx = p->sx->sx;		// 1st step
-          t->sx = NULL;			// 2nd step
-          
-          delete (t);			// 6th step
-          return;
+		relinkRight(n, p);
         } else if (n == *(p->dx)) {
           cout << "... on the dx branch\n";
 		relinkLeft(n, p);
@@ -377,11 +425,31 @@ int main() {
 
 /////////// Insertion of new Nodes - Test Case
 	NodeCell<int,string> n(0, "Joint Name");
-	
-	if ( !(t.insertNew (n.changeIndex(600))) )
+
+        // Let's populate the left branch	
+	if ( !(t.insertNew(n.changeIndex(300))) )
 		return (1);   // failed test 
 
 	if ( !(t.insertNew(n.changeIndex(200))) )
+		return (1);   // failed test 
+	
+	if ( !(t.insertNew(n.changeIndex(118))) )
+		return (1);   // failed test 
+	
+	if ( !(t.insertNew(n.changeIndex(202))) )
+		return (1);   // failed test 
+	
+	if ( !(t.insertNew(n.changeIndex(350))) )
+		return (1);   // failed test 
+	
+	if ( !(t.insertNew(n.changeIndex(348))) )
+		return (1);   // failed test 
+	
+	if ( !(t.insertNew(n.changeIndex(352))) )
+		return (1);   // failed test 
+	
+	// ... and now the right branch
+	if ( !(t.insertNew (n.changeIndex(600))) )
 		return (1);   // failed test 
 
 	if ( !(t.insertNew(n.changeIndex(550))) )
@@ -401,19 +469,16 @@ int main() {
 
 	if ( !(t.insertNew(n.changeIndex(648))) )
 		return (1);   // failed test 
-
-//	if ( !(t.insertNew (n.changeIndex(300))) )
-//		return (1);   // failed test 
 		
 	cout << "Added new nodes:" << t << "\n";
 
 /////////// Search and Deletion of old Nodes - Test Case
-//	if ( t.searchItem(n.changeIndex(300)) != NULL ) 
-//		if ( !(t.delNode(n.changeIndex(300))) )
-//				return (1);   // failed test 
-
 //	if ( t.searchItem(n.changeIndex(600)) != NULL ) 
 		if ( !(t.delNode(n.changeIndex(600))) )
+				return (1);   // failed test 
+
+//	if ( t.searchItem(n.changeIndex(300)) != NULL ) 
+		if ( !(t.delNode(n.changeIndex(300))) )
 				return (1);   // failed test 
 
 	cout << "Deleted old nodes:" << t << "\n";
