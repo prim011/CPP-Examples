@@ -490,6 +490,5 @@ int main() {
 	cout << "Deleted old nodes:" << t << "\n";
 
 /////////// Program Closure - RegTest passed
-//	return (0);   // test passed
-        return (1);   // temporary
+	return (0);   // test passed
 }
