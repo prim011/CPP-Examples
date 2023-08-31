@@ -18,10 +18,11 @@ using namespace std;
 template <class I, class S>
 class NodeCell {
 public:
-	I 	index;		// an integer index for the node
-	S	jointName; 	// a string of information
+	I 	index;		// index class I: operators <>= needed
+	S	jointName; 	// as class S
 	NodeCell* dx;		// a link to the right element, 
 	NodeCell* sx;		// a link to the left element.
+
 	// default constructor
 	NodeCell () {index = 0; sx = dx = NULL;}   
 	// initialization constructor 
@@ -32,14 +33,15 @@ public:
 		jointName(n.jointName)
 		{ sx = n.sx; dx = n.dx; }
 	// destructor: It releases all resources linked to it! 
-	// set "sx and dx to NULL if you do not want to remove the rest of the nodes
+	// set sx and dx to NULL if you do not want to remove 
+        // the rest of the nodes
 	~NodeCell() {
 	   	if(sx)           
       			delete sx;
       		if(dx)
       			delete dx;                    
       
-   	  	index.~I();
+   	  	index.~I();       
    	  	jointName.~S();
 	}
 	
@@ -75,7 +77,12 @@ public:
 /**
  * @brief class for the binary tree data structure 
  *
- * This class will have a pointer to the tree, root, and includes the NodeClass.
+ * This class will have a pointer to the tree, root, as 
+ * private member of the class. 
+ * The methods are the usual needed for insertion, deletion
+ * and print of the tree on an ostream. 
+ * Other service routines have been defined as private as they 
+ * serve the main class method interface
  */
 template <class I, class S>
 class TreeClass {
@@ -83,21 +90,19 @@ class TreeClass {
 private:
 	NodeCell<I,S>  *root;	// point to the root element
 
-
- 	void traverse (ostream&, NodeCell<I,S>* );
- 			// navigate inorderly and print nodes
+  	// navigate inorderly and print nodes
+	void traverse (ostream&, NodeCell<I,S>* );
+        // service funtion to find the minimum in a branch tree
 	NodeCell<I,S>* minimum(NodeCell<I,S>*);
-			// service funtion to find the minimum in a branch tree
+	// service funtion to find the maximum in a branch tree
 	NodeCell<I,S>* maximum(NodeCell<I,S>*);			
-			// service funtion to find the maximum in a branch tree
+	// service functions for relink during deletion
 	void relinkLeft(NodeCell<I,S> &, NodeCell<I,S>* );
 	void relinkRight(NodeCell<I,S> &, NodeCell<I,S>* );
-			// service functions for relink during deletion
+	// service function to delete a node
 	void deletenode (NodeCell<I,S>&, NodeCell<I,S>* );
-			// service function to delete a node
-	void searchNode (NodeCell<I,S>&, NodeCell<I,S>*, NodeCell<I,S>* );
-			// service function to search for a node	
-				
+        // service function to search for a node	
+	void searchNode (NodeCell<I,S>&, NodeCell<I,S>*, NodeCell<I,S>* );				
 
 public:
 	// default contructor
@@ -114,9 +119,9 @@ public:
         // default destructor
         ~TreeClass() { delete (root); }
         
- 	bool insertNew (NodeCell<I,S>&);		// equivalent of pop the element in 
- 	bool delNode (NodeCell<I,S>&);			// equivalent of push the element out
- 	NodeCell<I,S>* searchItem (NodeCell<I,S>&);	// search an item for its index
+ 	bool insertNew (NodeCell<I,S>&);	 
+ 	bool delNode (NodeCell<I,S>&);	
+ 	NodeCell<I,S>* searchItem (NodeCell<I,S>&);
 
  	// overload of the << operator
  	friend ostream& operator<< (ostream& os, TreeClass& t) {
@@ -240,7 +245,7 @@ NodeCell<I,S>* TreeClass<I,S>::searchItem (NodeCell<I,S> & n) {
 
 /**
  * @brief Returns the minimum in a given tree branch
- 
+ *
  * This function searches the minimum of a given branch in the tree,
  * according to the index value. Assumption is that nodes belongs to 
  * the tree
@@ -260,6 +265,17 @@ NodeCell<I,S>* TreeClass<I,S>::minimum(NodeCell<I,S>* p) {
         return current;
     }
 
+/**
+ * @brief Returns the maximum in a given tree branch
+ *
+ * This function searches the minimum of a given branch in the tree,
+ * according to the index value. Assumption is that nodes belongs to 
+ * the tree
+ *
+ * @param the branch tree to start the search from
+ * @return a node pointer the element or NULL if not found
+ */
+
 template <class I, class S>
 NodeCell<I,S>* TreeClass<I,S>::maximum(NodeCell<I,S>* p) {
         NodeCell<I,S>* current = p;
@@ -278,6 +294,9 @@ NodeCell<I,S>* TreeClass<I,S>::maximum(NodeCell<I,S>* p) {
  * This function relinks the pointers in the tree, once the deletion 
  * node has been identified. It does also call the delete function 
  * for the node itself, after it has been isolated from the tree.
+ * This method is advisable, especially when the node to be removed
+ * is not a leaf.
+ *
  * Here are the six steps performed in the example of a right branch
  *
  *	     500 ----+                  1.  Relink Anchestor's node 
@@ -310,21 +329,17 @@ NodeCell<I,S>* TreeClass<I,S>::maximum(NodeCell<I,S>* p) {
 template <class I, class S>
 void TreeClass<I,S>::relinkLeft(NodeCell<I,S> &n, NodeCell<I,S>* p) {
 
-	if ( n != *(p->dx) )		// we are working on the right branch of p
+        // we are working on the right branch of p
+	if ( n != *(p->dx) )
 		return;
 
         NodeCell<I,S>* t=p->dx;	// pointing to the node to remove
-        cout << "node to be removed: " << *t << endl; 
-        cout << "current node :" << *p << endl;
         p->dx = p->dx->dx;		// 1st step
-        cout << "1st step done \n";
         NodeCell<I,S>* temp;
         temp = minimum(t->dx);          
         t->dx = NULL;			// 2nd step 
-        if (p->dx != NULL)		// 3th step
-        	p->dx->sx = t->sx;	
-        cout << "step 3. finished \n";
-        cout << "min : " << temp << endl;
+        if (p->dx != NULL)		
+        	p->dx->sx = t->sx;	// 3th step
         NodeCell<I,S>* k = maximum(t->sx);
         cout << "max : " << k << endl;
         if (k != NULL) 
@@ -337,14 +352,11 @@ void TreeClass<I,S>::relinkLeft(NodeCell<I,S> &n, NodeCell<I,S>* p) {
 template <class I, class S>
 void TreeClass<I,S>::relinkRight(NodeCell<I,S> &n, NodeCell<I,S>* p) {
 
-	if ( n != *(p->sx) )		// we are working on the left branch of p
+	if ( n != *(p->sx) )
 		return;
 
         NodeCell<I,S>* t=p->sx;	// pointing to the node to remove
-        cout << "node to be removed: " << *t << endl; 
-        cout << "current node :" << *p << endl;
         p->sx = p->sx->sx;		// 1st step
-        cout << "1st step done \n";
         // before removing the link in 2nd step,
         // let's calculate the maximum for later in step 4
         NodeCell<I,S>* k = maximum(t->sx);  
@@ -353,8 +365,6 @@ void TreeClass<I,S>::relinkRight(NodeCell<I,S> &n, NodeCell<I,S>* p) {
         	p->sx->dx = t->dx;	// 3th step
         cout << "step 3. finished \n";
 	NodeCell<I,S>* temp = minimum(t->dx);          
-        cout << "min : " << temp << endl;
-        cout << "max : " << k << endl;
         if (k != NULL) 
         	temp->sx = k;		// 4th step
         t->dx = NULL;			// 5th step
@@ -379,10 +389,8 @@ void TreeClass<I,S>::deletenode (NodeCell<I,S>& n, NodeCell<I,S> *p) {
       if (!notFound) {
              cout << "node found :" << p << endl;      
         if (n == *(p->sx)) {
-          cout << "... on the sx branch\n";
 		relinkRight(n, p);
         } else if (n == *(p->dx)) {
-          cout << "... on the dx branch\n";
 		relinkLeft(n, p);
         } else {
 	        cout << "pit fall\n";
@@ -413,11 +421,8 @@ void TreeClass<I,S>::deletenode (NodeCell<I,S>& n, NodeCell<I,S> *p) {
  */
 template <class I, class S>
 bool TreeClass<I,S>::delNode (NodeCell<I,S> &n) {
-	NodeCell<I,S>* p = root;
-	
-	cout << "Deleting Node: " << n;
 	notFound = true;	
-	deletenode (n,p);
+	deletenode (n,root);
 	return true;
 } 
 
