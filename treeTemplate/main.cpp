@@ -61,7 +61,12 @@ public:
 		os << "\tindex: " << t.index;
 		os << "\tJoint Name: " << t.jointName;
 		os << "\tleft: " << t.sx;
-		os << "\tright: " << t.dx << endl; 
+		if (t.sx)
+                   os << "->" << t.sx->index;
+		os << "\tright: " << t.dx;
+                if (t.dx)
+                   os << "->" << t.dx->index;
+                os << endl;
 		return os; 	
 	}
 };
@@ -484,5 +489,6 @@ int main() {
 	cout << "Deleted old nodes:" << t << "\n";
 
 /////////// Program Closure - RegTest passed
-	return (0);   // test passed
+//	return (0);   // test passed
+        return (1);   // temporary
 }
