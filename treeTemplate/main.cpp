@@ -356,7 +356,7 @@ void TreeClass<I,S>::relinkRight(NodeCell<I,S> &n, NodeCell<I,S>* p) {
         cout << "min : " << temp << endl;
         cout << "max : " << k << endl;
         if (k != NULL) 
-        	k->dx = temp;		// 4th step
+        	temp->sx = k;		// 4th step
         t->dx = NULL;			// 5th step
         delete (t);			// 6th step 
 }
