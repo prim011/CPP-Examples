@@ -345,14 +345,15 @@ void TreeClass<I,S>::relinkRight(NodeCell<I,S> &n, NodeCell<I,S>* p) {
         cout << "current node :" << *p << endl;
         p->sx = p->sx->sx;		// 1st step
         cout << "1st step done \n";
-        NodeCell<I,S>* temp;
-        temp = minimum(t->dx);          
+        // before removing the link in 2nd step,
+        // let's calculate the maximum for later in step 4
+        NodeCell<I,S>* k = maximum(t->sx);  
         t->sx = NULL;			// 2nd step 
         if (p->sx != NULL)		
         	p->sx->dx = t->dx;	// 3th step
         cout << "step 3. finished \n";
+	NodeCell<I,S>* temp = minimum(t->dx);          
         cout << "min : " << temp << endl;
-        NodeCell<I,S>* k = maximum(t->sx);
         cout << "max : " << k << endl;
         if (k != NULL) 
         	k->dx = temp;		// 4th step
