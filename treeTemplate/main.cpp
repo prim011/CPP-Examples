@@ -95,14 +95,15 @@ private:
         // service funtion to find the minimum in a branch tree
 	NodeCell<I,S>* minimum(NodeCell<I,S>*);
 	// service funtion to find the maximum in a branch tree
-	NodeCell<I,S>* maximum(NodeCell<I,S>*);			
+	NodeCell<I,S>* maximum(NodeCell<I,S>* );			
 	// service functions for relink during deletion
 	void relinkLeft(NodeCell<I,S> &, NodeCell<I,S>* );
 	void relinkRight(NodeCell<I,S> &, NodeCell<I,S>* );
+	void relinkRoot(NodeCell<I,S> &, NodeCell<I,S>* );
 	// service function to delete a node
 	void deletenode (NodeCell<I,S>&, NodeCell<I,S>* );
         // service function to search for a node	
-	void searchNode (NodeCell<I,S>&, NodeCell<I,S>*, NodeCell<I,S>* );				
+	NodeCell<I,S>* searchNode (NodeCell<I,S>&, NodeCell<I,S>* );				
 
 public:
 	// default contructor
@@ -127,7 +128,10 @@ public:
  	friend ostream& operator<< (ostream& os, TreeClass& t) {
  		NodeCell<I,S> *p=t.root;
 	
-		os << "\nTREE PRINTOUT - root: " << p << endl;
+		os << "\nTREE PRINTOUT - root: " << p;
+		if (p)
+                   os << "->" << p->index;
+		os << endl;
 		os << "\n=============\n";
 		
 		t.traverse (os, p);
@@ -195,27 +199,14 @@ bool TreeClass<I,S>::insertNew (NodeCell<I,S> &n) {
 bool notFound = true;
 
 template <class I, class S>
-void TreeClass<I,S>::searchNode (NodeCell<I,S>& n, NodeCell<I,S>* p, NodeCell<I,S> *r) {
+NodeCell<I,S> * TreeClass<I,S>::searchNode (NodeCell<I,S>& n, NodeCell<I,S>* p) {
 
-	if (notFound)
-	{
-		if (p == NULL)
-			return;
+	if ((p == NULL) || (n == *p) )
+		return p;
 			
-		r = p;
-		searchNode (n, p->sx, r);
-		if (n == *p) {
-			cout << "... found elemet ";
-			notFound = false; 	
-		}
-		if(notFound) {
-			r = p;
-			searchNode (n, p->dx, r);
-		}
-		r = NULL;
-	} else {
-		return;
-	}
+	if (n < *p)
+		return searchNode (n, p->sx);
+	return searchNode (n, p->dx);
 }
 
 
@@ -234,8 +225,7 @@ NodeCell<I,S>* TreeClass<I,S>::searchItem (NodeCell<I,S> & n) {
 
 	cout << "Searching for node: " << n;
 	
-	notFound = true;
-	searchNode (n, root, p);
+	p = searchNode (n, root);
 	
 	if (p)
 		cout << "Found elemet " << *p << endl;
@@ -328,12 +318,13 @@ NodeCell<I,S>* TreeClass<I,S>::maximum(NodeCell<I,S>* p) {
  */
 template <class I, class S>
 void TreeClass<I,S>::relinkLeft(NodeCell<I,S> &n, NodeCell<I,S>* p) {
-
+	NodeCell<I,S>* t;
+	
         // we are working on the right branch of p
 	if ( n != *(p->dx) )
 		return;
 
-        NodeCell<I,S>* t=p->dx;	// pointing to the node to remove
+        t = p->dx;	// pointing to the node to remove
         p->dx = p->dx->dx;		// 1st step
         NodeCell<I,S>* temp;
         temp = minimum(t->dx);          
@@ -341,7 +332,6 @@ void TreeClass<I,S>::relinkLeft(NodeCell<I,S> &n, NodeCell<I,S>* p) {
         if (p->dx != NULL)		
         	p->dx->sx = t->sx;	// 3th step
         NodeCell<I,S>* k = maximum(t->sx);
-        cout << "max : " << k << endl;
         if (k != NULL) 
         	k->dx = temp;		// 4th step
         t->sx = NULL;			// 5th step
@@ -351,11 +341,12 @@ void TreeClass<I,S>::relinkLeft(NodeCell<I,S> &n, NodeCell<I,S>* p) {
 
 template <class I, class S>
 void TreeClass<I,S>::relinkRight(NodeCell<I,S> &n, NodeCell<I,S>* p) {
+        NodeCell<I,S>* t;
 
 	if ( n != *(p->sx) )
 		return;
 
-        NodeCell<I,S>* t=p->sx;	// pointing to the node to remove
+       	t = p->sx;	// pointing to the node to remove
         p->sx = p->sx->sx;		// 1st step
         // before removing the link in 2nd step,
         // let's calculate the maximum for later in step 4
@@ -363,12 +354,28 @@ void TreeClass<I,S>::relinkRight(NodeCell<I,S> &n, NodeCell<I,S>* p) {
         t->sx = NULL;			// 2nd step 
         if (p->sx != NULL)		
         	p->sx->dx = t->dx;	// 3th step
-        cout << "step 3. finished \n";
 	NodeCell<I,S>* temp = minimum(t->dx);          
         if (k != NULL) 
-        	temp->sx = k;		// 4th step
+        	k->dx = temp;		// 4th step
         t->dx = NULL;			// 5th step
         delete (t);			// 6th step 
+}
+
+template <class I, class S>
+void TreeClass<I,S>::relinkRoot(NodeCell<I,S> &n, NodeCell<I,S>* p) {
+        NodeCell<I,S>* t;
+        
+        if ( n != *p )
+        	return;
+        
+       	t = root;		// pointing to the node to remove
+        root = root->sx;		// 1st step
+        NodeCell<I,S>* k = maximum(t->sx);  
+        t->sx = NULL;			// 2nd step 
+        if (k != NULL) 
+        	k->dx = t->dx;		// 3rd step
+        t->dx = NULL;			// 4th step
+        delete (t);			// 5th step 
 }
 
 /**
@@ -379,7 +386,7 @@ void TreeClass<I,S>::relinkRight(NodeCell<I,S> &n, NodeCell<I,S>* p) {
  * Beneath the morituri node. This is of relevance especially if the morituri node
  * is not a leaf. The actual delete funtion is called in the relinkLeft/Right()   
  *
- * @param the node to be removed (the _morituri_ node)
+ * @param the node to be removed (the morituri node)
  * @param the branch tree beneath the morituri node
  * @return N/A
  */
@@ -387,8 +394,9 @@ template <class I, class S>
 void TreeClass<I,S>::deletenode (NodeCell<I,S>& n, NodeCell<I,S> *p) {
       
       if (!notFound) {
-             cout << "node found :" << p << endl;      
-        if (n == *(p->sx)) {
+        if (n == *p) {
+        	relinkRoot(n,p);
+        } else if (n == *(p->sx) ) {
 		relinkRight(n, p);
         } else if (n == *(p->dx)) {
 		relinkLeft(n, p);
@@ -399,11 +407,16 @@ void TreeClass<I,S>::deletenode (NodeCell<I,S>& n, NodeCell<I,S> *p) {
       } else {        
         if (p == NULL) 
             return;
+        else if (n == *p) {
+        	cout << "Removing root \n";
+		notFound = false;
+       		deletenode(n,p);        
+        }
         else if ((p->sx) && (n < *(p->sx)))
         	deletenode(n,p->sx->sx);
         else if ((p->dx) && (n > *(p->dx)))
         	deletenode(n,p->dx->dx);
-        else if ((n == *(p->sx)) || (n == *(p->dx))) {
+        else if ( (n == *(p->sx)) || (n == *(p->dx)) ) {
         		notFound = false;
         		deletenode(n,p);
               }
@@ -421,6 +434,16 @@ void TreeClass<I,S>::deletenode (NodeCell<I,S>& n, NodeCell<I,S> *p) {
  */
 template <class I, class S>
 bool TreeClass<I,S>::delNode (NodeCell<I,S> &n) {
+	NodeCell<I,S>* p;
+	
+	p = searchNode (n, root);
+	
+	if (p == NULL) {
+		cout << " Node to be deleted not found :" << n << endl;
+		return false;
+	}
+	cout << "Deleting Node :" << *p << endl;
+		
 	notFound = true;	
 	deletenode (n,root);
 	return true;
@@ -484,13 +507,23 @@ int main() {
 	cout << "Added new nodes:" << t << "\n";
 
 /////////// Search and Deletion of old Nodes - Test Case
-//	if ( t.searchItem(n.changeIndex(600)) != NULL ) 
-		if ( !(t.delNode(n.changeIndex(600))) )
-				return (1);   // failed test 
+        // test removing one node at the leaf
+	if ( !(t.delNode(n.changeIndex(652))) )
+			return (1);   // failed test 
 
-//	if ( t.searchItem(n.changeIndex(300)) != NULL ) 
-		if ( !(t.delNode(n.changeIndex(300))) )
-				return (1);   // failed test 
+	// test removing one node in the middle of the 
+	// right branch - using relinkLeft()
+	if ( !(t.delNode(n.changeIndex(600))) )
+			return (1);   // failed test 
+
+	// test removing one node in the middle of the 
+	// left branch - using relinkRight()
+	if ( !(t.delNode(n.changeIndex(300))) )
+			return (1);   // failed test 
+
+        // test removing the root - using relinkRoot()
+	if ( !(t.delNode(n.changeIndex(500))) )
+			return (1);   // failed test 
 
 	cout << "Deleted old nodes:" << t << "\n";
 
