@@ -15,12 +15,7 @@ public:
   virtual string getName () = 0;
   virtual bool getPermit () = 0;
   virtual int getSerialN () = 0;
-  //  virtual ~LibAccess () = 0;
   
-//  void operator= (LibAccess &b) {
-//    cout << "oevrlaod of = operator for LibAccess\n";
-//    *this = b;
-//  }
   friend ostream& operator<< (ostream& os, LibAccess &l)
   {
     os << "\tUser name :" << l.getName();
@@ -74,7 +69,6 @@ class Prof: private LibAccess {
  public:
   Prof () { serialNP = 0; active = false; name="";}
   Prof (string s): name(s), serialNP(++masterSerialNum), active(true) {}
-  ~Prof () { name.~string(); }
   // implementation of abstract methods
   string getName() { return name; }   
   bool getPermit () { return active; }
@@ -99,27 +93,3 @@ class Prof: private LibAccess {
     return os;
   }
 };
-
-
-
-
-//int main () {
-//  Prof p ("cicero");
-  
-//  Student a ("pinco pallo 1");
-//  Student b ("pinco pallo 2");
-
-//  cout << p << a << b;
-
-//  Prof *pP = new Prof("cicero2");
-//  LibAccess *aLibUser;
-
-//  aLibUser = (LibAccess*) &p;
-//  cout << *aLibUser;
-
-//  aLibUser = (LibAccess*) &b;
-//  cout << *aLibUser;
-
-//  aLibUser = (LibAccess*) pP;
-//  cout << *aLibUser;
-//}

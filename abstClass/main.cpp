@@ -69,7 +69,10 @@ public:
 	friend ostream& operator<< (ostream& os, NodeCell<I,S>& t) {	
 	  os << "\n";
 	  os << "\tindex: " << t.index;
-	  os << "  " << t.user;
+	  os << "  " << *(t.user);  // S is a pointer to abstract class.
+	                            // we want to print the class info
+	                            // either Student or Professor.
+	                            // Hence *(S)
 	  os << "\tleft: " << t.sx;
 	  if (t.sx)
 	    os << "->" << t.sx->index;
@@ -494,14 +497,12 @@ int main() {
 	cout << "And this is how the tree looks like :" << t <<"\n";
 /////////// Insertion of new Nodes - Test Case
 
-	Prof p2 ("pinco pallo");
-
 	for (int i=1; i < (sizeof(index_array)/sizeof(int)); i++)
 	  {
-	    Prof p2 ("pinco pallo");
+	    Student s1 ("pinco pallo");
 	    NodeCell<int, S> n (
 				   index_array[i],
-				   (S) &p2);
+				   (S) &s1);
 	    if ( !(t.insertNew(n)) )
 	      return (1);   // failed test
 	  }
@@ -510,24 +511,26 @@ int main() {
 
 /////////// Search and Deletion of old Nodes - Test Case
         // test removing one node at the leaf
-	NodeCell<int, S> n (
+	Student s2 ("pinco pallo");
+
+	NodeCell<int, S> d (
 			    652,
-			    (S) &p2);
-	if ( !(t.delNode(n)) )
+			    (S) &s2);
+	if ( !(t.delNode(d)) )
 	  return (1);   // failed test 
 
 	// test removing one node in the middle of the 
 	// right branch - using relinkLeft()
-	if ( !(t.delNode(n.changeIndex(600))) )
+	if ( !(t.delNode(d.changeIndex(600))) )
 	  return (1);   // failed test 
 
 	// test removing one node in the middle of the 
 	// left branch - using relinkRight()
-	if ( !(t.delNode(n.changeIndex(300))) )
+	if ( !(t.delNode(d.changeIndex(300))) )
 	  return (1);   // failed test 
 
         // test removing the root - using relinkRoot()
-	if ( !(t.delNode(n.changeIndex(500))) )
+	if ( !(t.delNode(d.changeIndex(500))) )
 	  return (1);   // failed test 
 
         cout << "Deleted old nodes:" << t << "\n";
