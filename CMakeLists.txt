@@ -13,6 +13,7 @@ project(MyProject
 add_subdirectory(listExample)
 add_subdirectory(listTemplate)
 add_subdirectory(treeTemplate)
+add_subdirectory(abstClass)
 
 enable_testing()
 
