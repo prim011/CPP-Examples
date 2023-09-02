@@ -1,25 +1,31 @@
 # Quick Reference for Abstract Classes using Template Binary Tree Class
 
-This quick example code implements the an example of abstract class used as main information in a Binary Tree Template.
+This quick example code implements an example of the abstract class used as main information in a Binary Tree Template.
 
 ## The Abstract class
-Imagine you would like to store only the information needed for accessing the University Library without necessarily disclosing if the user is a professor or a student. For the benefit of this exercise, we have assumed that minimal information is constitute by
-- _serial number_: incrementally increasing and shared between professors and students (that might not be what happen in reality)
-- The name as an identification, but it could have been anything else for identifying the users, for example a digital identity.
-- Whether the user has _active_ permission. In the case the student of professor are allowed in the University Library
+Imagine you would like to store only the information needed for accessing the University Library without necessarily disclosing if the user is a professor or a student. For the benefit of this exercise, we have assumed that minimal information is constituted by
+- _serial number_: incrementally increasing and shared between professors and students (that might not be what happens in reality)
+- The name is an identification, but it could have been anything else for identifying the users, for example, a digital identity.
+- Whether the user has _active_ permission. In this case, the student or the professor are allowed in the University Library
 
-The the _LibAccess_ class is not a pure virtual class as we have introduce a dedicated printout function of only those information needed for accessing the library (i.e. those three fields we have presented before).
+The _LibAccess_ class is not a pure virtual class as we have introduced a dedicated printout function of only the information needed for accessing the library (i.e. those three fields we have presented before).
 
-The other three methods are defined virtual,a s they need to be developed/implemented by the derived classes. In our context _Student_ and _Professor_.
+The other three methods are defined as virtual, as they need to be developed/implemented by the derived classes. In our context _Student_ and _Professor_.
 
 
 ## The use of the Binary tree in a template format 
 
-It makes it really easy to reuse the work done in other exercise for this specific example. The format to accept any type of node structure makes the extension to the abstract class very easy.  The user can define the node completely independently at run time. The only constraint is related to the implicit need for the _index_ field to satisfy some order, typically with the overload of the '< > = ' operators. This index is typically different from the serial number of the users, as the index i a control field for the binary tree and the serial number can be used for checking the user identity, instead.
+It makes it easy to reuse the work done in other exercises for this specific example. The format to accept any type of node structure makes the extension to the abstract class very easy.  The user can define the node completely independently at run time. The only constraint is related to the implicit need for the _index_ field to satisfy some order, typically with the overload of the '< > = ' operators. This index is typically different from the serial number of the users, as the index i a control field for the binary tree and the serial number can be used for checking the user identity, instead.
 
-Only one attention, since an abstract class can not be instantiated, we have used a trick with _typedef_ to include a pointer to the abstract class as the information stored in the nodes tree. This is predicated on the fact that either the Professor or the Student records are created upfront and then we use the pointer to the abstract class for each of those in the tree's nodes. This is line with a real case example where, normally the requirement to store information about Students and Professors are different from those who need to manage the access to the University Library. Thanks to the Abstract class concept in C++ it is possible to share only the information needed to the two environment. It is a sort of interface that those two classes have to the Library in order to access the building. In fact in C++, an interface is usually defined as a virtual class in which *all* its members functions/methods are virtual. Those virtual methods are defined as the minimum that the _user_, in this context the University Library would need to manage access to the building.
+Only one attention, since an abstract class can not be instantiated, we have used a trick with _typedef_ to include a pointer to the abstract class as the information stored in the nodes tree. This is predicated on the fact that either the Professor or the Student records are created upfront and then we use the pointer to the abstract class for each of those in the tree's nodes. This is in line with a real case example where, normally the requirement to store information about Students and Professors is different from those who need to manage access to the University Library. Thanks to the Abstract class concept in C++ it is possible to share only the information needed for the two environments. It is a sort of interface that those two classes have to the Library to access the building. In fact, in C++, an interface is usually defined as a virtual class in which *all* its member functions/methods are virtual. Those virtual methods are defined as the minimum that the _user_, in this context the University Library would need to manage access to the building.
 
-please refer to the treeTemplate example for more information about the binary tree data structure.
+Thanks to Abstract class the tree is composed of Professors, with the name "Cicero", and Students, with the name "pinco pallo". Both are part of the binary tree because the tree node points to the abstract class, which is the common part of those two classes.
+
+Typically, we have included one professor, as root at the beginning; then all others are students. 
+
+In the deletion, we show some examples of how internal and leaf nodes/students got removed from the tree. And finally, we get rid of the root, the professor (with no offence).
+
+Please refer to the treeTemplate example for more information about the binary tree data structure.
 
 
 There is also a quick example on `main()` function on how to use the `TreeClass<>` object, a small exercise on including nodes, searching dedicated nodes and removing them. The same code is also used as a regression test in the `.yml` file for the Continuous Integration (CI). This is why the `main()` function returns 0 or 1 according to the successful, or unsuccessful, completion of the tasks.
