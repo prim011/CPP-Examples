@@ -5,6 +5,12 @@
 
 using namespace std;
 
+int index_array [] = 
+ {
+   500, 300, 200, 118, 202, 350, 348, 352, 600, 550, 548, 552, 650, 648, 652
+ };
+
+
 /**
  * @brief Node definition in the tree 
  *
@@ -25,7 +31,7 @@ public:
 
 	// default constructor
 	NodeCell () {index = 0; sx = dx = NULL;}   
-	// initialization constructor 
+	// initialisation constructor 
 	NodeCell (I i, S s):index(i), jointName(s) {dx=sx=NULL;}
 	// copy constructor
 	NodeCell (const NodeCell& n):
@@ -92,15 +98,17 @@ private:
 
   	// navigate inorderly and print nodes
 	void traverse (ostream&, NodeCell<I,S>* );
-        // service funtion to find the minimum in a branch tree
+        // service function to find the minimum in a branch tree
 	NodeCell<I,S>* minimum(NodeCell<I,S>*);
-	// service funtion to find the maximum in a branch tree
+	// service function to find the maximum in a branch tree
 	NodeCell<I,S>* maximum(NodeCell<I,S>* );			
-	// service functions for relink during deletion
-	void relinkLeft(NodeCell<I,S> &, NodeCell<I,S>* );
-	void relinkRight(NodeCell<I,S> &, NodeCell<I,S>* );
-	void relinkRoot(NodeCell<I,S> &, NodeCell<I,S>* );
-	// service function to delete a node
+	// service functions for re-link during deletion
+	void relinkLeft(NodeCell<I,S>&, NodeCell<I,S>* );
+	void relinkRight(NodeCell<I,S>&, NodeCell<I,S>* );
+	void relinkRoot(NodeCell<I,S>&, NodeCell<I,S>* );
+        // service routine for node insertion
+        NodeCell<I,S>* insertnode(NodeCell<I,S>&,NodeCell<I,S>* );
+        // service function to delete a node
 	void deletenode (NodeCell<I,S>&, NodeCell<I,S>* );
         // service function to search for a node	
 	NodeCell<I,S>* searchNode (NodeCell<I,S>&, NodeCell<I,S>* );				
@@ -108,7 +116,7 @@ private:
 public:
 	// default contructor
         TreeClass() { root = NULL; }
-        // Constuctor with initialization
+        // Constructor with initialisation
         TreeClass(I setup, S st) {
         	root = new NodeCell<I,S> (setup, st);
         	root->sx=root->dx=NULL;
@@ -149,50 +157,35 @@ void TreeClass<I,S>::traverse (ostream& os, NodeCell<I,S> *p) {
 	traverse(os, p->dx);
 } 
 
+template <class I, class S>
+NodeCell<I,S>* TreeClass<I,S>::insertnode(NodeCell<I,S>& n,NodeCell<I,S>* p) {
+  if (p == NULL) {
+    p = new NodeCell(n);
+    return p;
+  }
+  
+
+  if (*p < n)
+    p->dx = insertnode(n, p->dx);
+  else if (*p > n)
+    p->sx = insertnode(n, p->sx);
+  
+  return p;
+}
+
 /**
  * @brief Insert one element in the tree
  *
  * This function inserts one node in the tree, in an inorder manner.
  *
  * @param the node to be included
- * @return diagnastic if the insertion was succesfull (true)
+ * @return diagnostic if the insertion was successful (true)
  */
 template <class I, class S>
 bool TreeClass<I,S>::insertNew (NodeCell<I,S> &n) {
-	NodeCell<I,S> *t;
-	bool retVal = false;
-
-	cout << "Inserting Node :" << n << endl;
+        cout << "Inserting Node :" << n << endl;
 		
-	if (root == NULL) {
-		root = new NodeCell<I,S> (n);		// use the copy contructor
-		return true;
-	}
-
-	t = new NodeCell<I,S> (n); 			// use the copy contructor 
-	if (t == NULL)
-		return retVal;  
-
-	NodeCell<I,S> *p = root;		
-	NodeCell<I,S> *q;			
-
-	while (p) {	
-		// have we found the right position?
-		if (n <= *p) {
-			q=p;
-			p=p->sx;
-		} else { 
-			q=p;
-			p=p->dx;
-		}
-	}	
-	
-	// add the node as the last element
-	if (n <= *q) 
-		q->sx = t;
-	else 
-		q->dx = t;	
-
+        insertnode (n, root);
 	return true;
 }
 
@@ -228,7 +221,7 @@ NodeCell<I,S>* TreeClass<I,S>::searchItem (NodeCell<I,S> & n) {
 	p = searchNode (n, root);
 	
 	if (p)
-		cout << "Found elemet " << *p << endl;
+		cout << "Found element " << *p << endl;
 	
 	return p;
 }
@@ -281,7 +274,7 @@ NodeCell<I,S>* TreeClass<I,S>::maximum(NodeCell<I,S>* p) {
 /**
  * @brief Support routine for the delNode() method
  * 
- * This function relinks the pointers in the tree, once the deletion 
+ * This function re-links the pointers in the tree, once the deletion 
  * node has been identified. It does also call the delete function 
  * for the node itself, after it has been isolated from the tree.
  * This method is advisable, especially when the node to be removed
@@ -289,12 +282,12 @@ NodeCell<I,S>* TreeClass<I,S>::maximum(NodeCell<I,S>* p) {
  *
  * Here are the six steps performed in the example of a right branch
  *
- *	     500 ----+                  1.  Relink Anchestor's node 
- * morituri    \     |  1.                   to chil's node
+ *	     500 ----+                  1.  Re-link Ancestor's node 
+ * morituri    \     |  1.                   to child's node
  *   Node  --> 600   |                  2.  Remove (to NULL) Node's dx
- *           5./ \2. /                  3.  Relink child's node sx
+ *           5./ \2. /                  3.  Re-link child's node sx
  *	     550---650                        to Node's sx
- *	     / \ 3. / \                  4.  Relink Maximum in 
+ *	     / \ 3. / \                  4.  Re-link Maximum in 
  *        548 552  648 652                    Node's sx branch to 
  *              |   |                         Minimum in Node's dx branch 
  *              +---+                    5.  Remove (to NULL) Node's sx
@@ -330,7 +323,7 @@ void TreeClass<I,S>::relinkLeft(NodeCell<I,S> &n, NodeCell<I,S>* p) {
         temp = minimum(t->dx);          
         t->dx = NULL;			// 2nd step 
         if (p->dx != NULL)		
-        	p->dx->sx = t->sx;	// 3th step
+        	p->dx->sx = t->sx;	// 3rd step
         NodeCell<I,S>* k = maximum(t->sx);
         if (k != NULL) 
         	k->dx = temp;		// 4th step
@@ -353,7 +346,7 @@ void TreeClass<I,S>::relinkRight(NodeCell<I,S> &n, NodeCell<I,S>* p) {
         NodeCell<I,S>* k = maximum(t->sx);  
         t->sx = NULL;			// 2nd step 
         if (p->sx != NULL)		
-        	p->sx->dx = t->dx;	// 3th step
+        	p->sx->dx = t->dx;	// 3rd step
 	NodeCell<I,S>* temp = minimum(t->dx);          
         if (k != NULL) 
         	k->dx = temp;		// 4th step
@@ -361,6 +354,41 @@ void TreeClass<I,S>::relinkRight(NodeCell<I,S> &n, NodeCell<I,S>* p) {
         delete (t);			// 6th step 
 }
 
+/**
+ * @brief Support routine for the delNode() method
+ * 
+ * This function re-links the pointers in the tree, once the deletion 
+ * node has been identified in the root. It does also call the delete 
+ * function for the root node itself, after it has been isolated from 
+ * the tree and a new root has been identified
+ *
+ * Here are the five steps performed in the example of a right branch
+ *      root ---------+ 
+ *	 \            50                1. Re-link root node to 
+ *        \      3./     \4.                child's node
+ *    1.   \_    30  2.__80             2. Relink maximum on sx
+ *           \  /  \/    / \                branch to (ex-)root->dx
+ *	      20  40   60  90           3. Remove ex-root sx   
+ *	                \                    sx = NULL
+ *                       70             4. Remove ex-root dx 
+ *                                           dx = NULL 
+ *                                      5. delete ex-root
+ * After these six operations the tree will look like:
+ *     
+ *        50                      30
+ *       /   \                   /   \
+ *     30     80    -->         20    40
+ *    / \    / \    -->                \
+ *   20 40  60 90   -->                80
+ *            \                       /  \
+ *            70                     60  90
+ *                                    \
+ *                                     70
+ *
+ * @param the node to be removed (the _morituri_ node)
+ * @param the branch tree beneath the morituri node
+ * @return N/A
+ */
 template <class I, class S>
 void TreeClass<I,S>::relinkRoot(NodeCell<I,S> &n, NodeCell<I,S>* p) {
         NodeCell<I,S>* t;
@@ -382,9 +410,9 @@ void TreeClass<I,S>::relinkRoot(NodeCell<I,S> &n, NodeCell<I,S>* p) {
  * @brief Support routine for the delNode() method
  * 
  * This function identifies the node to be removed, first, by using a recursion 
- * method. Then it calls the relinkLeft/Right() to relink the child nodes 
+ * method. Then it calls the relinkLeft/Right() to re-link the child nodes 
  * Beneath the morituri node. This is of relevance especially if the morituri node
- * is not a leaf. The actual delete funtion is called in the relinkLeft/Right()   
+ * is not a leaf. The actual delete function is called in the relinkLeft/Right()   
  *
  * @param the node to be removed (the morituri node)
  * @param the branch tree beneath the morituri node
@@ -430,7 +458,7 @@ void TreeClass<I,S>::deletenode (NodeCell<I,S>& n, NodeCell<I,S> *p) {
  * according to the index value.
  *
  * @param the node to be deleted
- * @return diagnastic if the deletion was succesfull (true)
+ * @return diagnostic if the deletion was successful (true)
  */
 template <class I, class S>
 bool TreeClass<I,S>::delNode (NodeCell<I,S> &n) {
@@ -450,7 +478,7 @@ bool TreeClass<I,S>::delNode (NodeCell<I,S> &n) {
 } 
 
 int main() {
-	cout << "Let's start with the Program Exection \n\n";
+	cout << "Let's start with the Program Execution \n\n";
 
 /////////// Creation of the Binary Tree	
 	TreeClass<int,string> t(500,"firstJoint");
@@ -461,47 +489,9 @@ int main() {
 	NodeCell<int,string> n(0, "Joint Name");
 
         // Let's populate the left branch	
-	if ( !(t.insertNew(n.changeIndex(300))) )
-		return (1);   // failed test 
 
-	if ( !(t.insertNew(n.changeIndex(200))) )
-		return (1);   // failed test 
-	
-	if ( !(t.insertNew(n.changeIndex(118))) )
-		return (1);   // failed test 
-	
-	if ( !(t.insertNew(n.changeIndex(202))) )
-		return (1);   // failed test 
-	
-	if ( !(t.insertNew(n.changeIndex(350))) )
-		return (1);   // failed test 
-	
-	if ( !(t.insertNew(n.changeIndex(348))) )
-		return (1);   // failed test 
-	
-	if ( !(t.insertNew(n.changeIndex(352))) )
-		return (1);   // failed test 
-	
-	// ... and now the right branch
-	if ( !(t.insertNew (n.changeIndex(600))) )
-		return (1);   // failed test 
-
-	if ( !(t.insertNew(n.changeIndex(550))) )
-		return (1);   // failed test 
-
-	if ( !(t.insertNew(n.changeIndex(548))) )
-		return (1);   // failed test 
-
-	if ( !(t.insertNew(n.changeIndex(552))) )
-		return (1);   // failed test 
-	
-	if ( !(t.insertNew(n.changeIndex(650))) )
-		return (1);   // failed test 
-	
-	if ( !(t.insertNew(n.changeIndex(652))) )
-		return (1);   // failed test 
-
-	if ( !(t.insertNew(n.changeIndex(648))) )
+	for (int i=1; i  <= (sizeof(index_array)/sizeof(int)); i++)
+	    if ( !(t.insertNew(n.changeIndex(index_array[i]))) )
 		return (1);   // failed test 
 		
 	cout << "Added new nodes:" << t << "\n";
