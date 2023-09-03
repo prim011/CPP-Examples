@@ -1,11 +1,11 @@
 # Quick Reference for Abstract Classes using Template Binary Tree Class
 
-This quick example code implements an example of the abstract class used as main information in a Binary Tree Template.
+This quick example code implements a possible reference of an abstract class used in conjunction with a Binary Tree Template, where the main node's information is the abstract class. We will learn how this property allows us to include in the tree other classes, derived by that abstract common factor.
 
 ## The Abstract class
 Imagine you would like to store only the information needed for accessing the University Library without necessarily disclosing if the user is a professor or a student. For the benefit of this exercise, we have assumed that minimal information is constituted by
 - _serial number_: incrementally increasing and shared between professors and students (that might not be what happens in reality)
-- The name is an identification, but it could have been anything else for identifying the users, for example, a digital identity.
+- The _name_ is an identification, but it could have been anything else for identifying the users, for example, a digital identity.
 - Whether the user has _active_ permission. In this case, the student or the professor are allowed in the University Library
 
 The _LibAccess_ class is not a pure virtual class as we have introduced a dedicated printout function of only the information needed for accessing the library (i.e. those three fields we have presented before).
