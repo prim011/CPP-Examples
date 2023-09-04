@@ -59,7 +59,6 @@ class Student: private LibAccess {
   int  getSerialN () { return serialNS; }
 
   void operator= (Student &b) {
-    cout << "oevrlaod of = operator\n";
     name = b.name;
     serialNS = b.serialNS;
     active = b.active;
@@ -101,7 +100,6 @@ class Prof: private LibAccess {
   int  getSerialN () { return serialNP; }  
 
   void operator= (Prof &b) {
-    cout << "oevrlaod of = operator in Prof\n";
     name = b.name;
     serialNP = b.serialNP;
     active = b.active;
