@@ -2,10 +2,11 @@
 #include <string>
 #include "libUsers.hpp"
 
-#define MAX_LENGTH  60
 
 using namespace std;
 
+
+// index array used to tree node insertion
 int index_array [] =
  {
    500, 300, 200, 118, 202, 350, 348, 352, 600, 550, 548, 552, 650, 648, 652
@@ -153,6 +154,15 @@ public:
  	}
 };
 
+/**
+ * @brief service routine function traverse
+ *
+ * Used in the tree print out to traverse the tree and
+ * print the node associated with. It uses recursion.
+ * @param ostream to print to
+ * @param pointer to the root/branch to print from
+ * @return N/A
+ */
 template <class I, class S>
 void TreeClass<I,S>::traverse (ostream& os, NodeCell<I,S> *p) {
 	if (p == NULL)
@@ -163,7 +173,15 @@ void TreeClass<I,S>::traverse (ostream& os, NodeCell<I,S> *p) {
 	traverse(os, p->dx);
 } 
 
-template <class I, class S>
+/**
+ * @brief service routine function insertnode
+ *
+ * Used in the new node tree insertion to traverse the tree and
+ * insert the node at the leaf level. It uses recursion.
+ * @param node to insert
+ * @param pointer to the root/branch to insert the node into
+ * @return pointer to the node inserted
+ */template <class I, class S>
 NodeCell<I,S>* TreeClass<I,S>::insertnode(NodeCell<I,S>& n,NodeCell<I,S>* p) {
   if (p == NULL) {
     p = new NodeCell(n);
@@ -195,6 +213,7 @@ bool TreeClass<I,S>::insertNew (NodeCell<I,S> &n) {
 }
 
 bool notFound = true;
+
 
 template <class I, class S>
 NodeCell<I,S> * TreeClass<I,S>::searchNode (NodeCell<I,S>& n, NodeCell<I,S>* p) {
