@@ -4,9 +4,9 @@ This quick example code implements a possible reference of an abstract class use
 
 ## The Abstract class
 Imagine you would like to store only the information needed for accessing the University Library without necessarily disclosing if the user is a professor or a student. For the benefit of this exercise, we have assumed that minimal information is constituted by
-- _serial number_: incrementally increasing and shared between professors and students (that might not be what happens in reality)
+- _serial number_: incrementally increasing number shared between professors and students (that might not be what happens in reality)
 - The _name_ is an identification, but it could have been anything else for identifying the users, for example, a digital identity.
-- Whether the user has _active_ permission. In this case, the student or the professor are allowed in the University Library
+- Whether the user has _active_ permission. In this case, the student or the professor are allowed in the University Library. It could be a proof from a digital signature or a zero-knowledge proof (zkp) in a more sophisticated digital identity scenario.
 
 The _LibAccess_ class is not a pure virtual class as we have introduced a dedicated printout function of only the information needed for accessing the library (i.e. those three fields we have presented before).
 
