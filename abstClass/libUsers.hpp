@@ -4,18 +4,24 @@ using namespace std;
 
 static int masterSerialNum = 0;
 
-// Define the base class identify which will be a derived class from
-// Students and from Professors
-
-// That identity class will be the right permission to access the
-// library
-
+/**
+ * @brief Abstract base class defining access to the Library
+ *
+ * Define the abstract base class identify from which  Students 
+ * and Professors classes will be derived.
+ * This identity class will be the right permission to access the
+ * library
+ */
 class LibAccess {
 public:
+  // virtual methods (to be implemented by derived classes)
+  // Assuming this is all we need to (digitally)
+  // identify Students and Professors, alike
   virtual string getName () = 0;
   virtual bool getPermit () = 0;
   virtual int getSerialN () = 0;
   
+  // printing out method specific for this class
   friend ostream& operator<< (ostream& os, LibAccess &l)
   {
     os << "\tUser name :" << l.getName();
@@ -30,6 +36,16 @@ public:
   }  
 };
 
+/**
+ * @brief Student Class
+ * 
+ * This class contains all the information related
+ * to Students. It has been derived from the abstract
+ * class LibAccess, which defines the interface to
+ * the University Library as access premises, 
+and 
+ * from which it will need to implement three methods.
+ */
 class Student: private LibAccess {
   string name;
   int    serialNS;
@@ -62,6 +78,16 @@ class Student: private LibAccess {
   
 };
 
+
+/**
+ * @brief Professors Class
+ * 
+ * This class contains all the information related
+ * to Professors. It has been derived from the abstract
+ * class LibAccess, which defines the interface to
+ * the University Library as access premises, and 
+ * from which it will need to implement three methods.
+ */
 class Prof: private LibAccess {
   string name;
   int    serialNP;
