@@ -45,7 +45,7 @@ public:
 	NodeCell (const NodeCell& n):
 	  index(n.index),
 	  user(n.user)  { sx = n.sx; dx = n.dx; }
-	// destructor: It releases all resources linked to it! 
+	// destruct: It releases all resources linked to it! 
 	// set sx and dx to NULL if you do not want to remove 
         // the rest of the nodes
 	~NodeCell() {
@@ -107,7 +107,7 @@ class TreeClass {
 private:
 	NodeCell<I,S>  *root;	// point to the root element
 
-  	// navigate inorderly and print nodes
+  	// navigate in-orderly and print nodes
 	void traverse (ostream&, NodeCell<I,S>* );
         // service function to find the minimum in a branch tree
 	NodeCell<I,S>* minimum(NodeCell<I,S>*);
@@ -125,7 +125,7 @@ private:
 	NodeCell<I,S>* searchNode (NodeCell<I,S>&, NodeCell<I,S>* );				
 
 public:
-	// default contructor
+	// default constructor
         TreeClass() { root = NULL; }
         // Constructor with initialisation
         TreeClass(I setup, S st) {
@@ -140,7 +140,7 @@ public:
         	root = new NodeCell<I,S> (t);
         	root->sx=root->dx=NULL;
         }
-        // default destructor
+        // default destruct
         ~TreeClass() { delete (root); }
         
  	bool insertNew (NodeCell<I,S>&);	 
@@ -204,7 +204,7 @@ NodeCell<I,S>* TreeClass<I,S>::insertnode(NodeCell<I,S>& n,NodeCell<I,S>* p) {
 /**
  * @brief Insert one element in the tree
  *
- * This function inserts one node in the tree, in an inorder manner.
+ * This function inserts one node in the tree, in an in-order manner.
  *
  * @param the node to be included
  * @return diagnostic if the insertion was successful (true)
@@ -394,7 +394,7 @@ void TreeClass<I,S>::relinkRight(NodeCell<I,S> &n, NodeCell<I,S>* p) {
  *      root ---------+ 
  *	 \            50                1. Re-link root node to 
  *        \      3./     \4.                child's node
- *    1.   \_    30  2.__80             2. Relink maximum on sx
+ *    1.   \_    30  2.__80             2. Re-link maximum on sx
  *           \  /  \/    / \                branch to (ex-)root->dx
  *	      20  40   60  90           3. Remove ex-root sx   
  *	                \                    sx = NULL
@@ -505,7 +505,22 @@ bool TreeClass<I,S>::delNode (NodeCell<I,S> &n) {
 	return true;
 } 
 
-
+/**
+ * Use Case:
+ * =========
+ *
+ * University Data Centre:                   University Library:
+ * ------------------------                  ------------------- 
+ *  Data Base of                               Repository of who can access
+ *  staffs and Students                        the University Library
+ *                            <LibAccess> 
+ *      staffRev []              ==>              TreeClass<indez, LibAccess>
+ ^                               ==>
+ *  (in this example an                       (Records modification on binary
+ *   array data structure                     tree does not imply changes to 
+ *   is use, but in reality                    the Uni DB Data Centre)
+ *   it could well be a DB)
+ */
 int main() {
 	cout << "Let's start with the Program Execution \n\n";
 
@@ -520,10 +535,10 @@ int main() {
 
 	for (int i=1; i < (sizeof(index_array)/sizeof(int)); i++)
 	  {
-	    // I am also building the staff Recrds
+	    // I am also building the staff Records
 	    staffRec[i] = (LibAccess*) new Student ("pinco pallo");
 
-	    // ... only here is pertinet for the Uni Lirary
+	    // ... only here is pertinent for the Uni Library
 	    NodeCell<int, pS> n (
 				   index_array[i],
 				   &staffRec[i]);
