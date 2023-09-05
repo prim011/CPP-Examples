@@ -12,6 +12,12 @@ int index_array [] =
    500, 300, 200, 118, 202, 350, 348, 352, 600, 550, 548, 552, 650, 648, 652
  };
 
+typedef LibAccess* pS;
+
+// this is the "supposedly" data base of university staff records
+// typically in a database
+pS staffRec [sizeof(index_array)/sizeof(int)];
+
 /**
  * @brief Node definition in the tree 
  *
@@ -37,9 +43,8 @@ public:
 	NodeCell (I i, S *s):index(i), user(*s) {dx=sx=NULL;}
 	// copy constructor
 	NodeCell (const NodeCell& n):
-		index(n.index),
-		user(n.user)
-		{ sx = n.sx; dx = n.dx; }
+	  index(n.index),
+	  user(n.user)  { sx = n.sx; dx = n.dx; }
 	// destructor: It releases all resources linked to it! 
 	// set sx and dx to NULL if you do not want to remove 
         // the rest of the nodes
@@ -500,28 +505,28 @@ bool TreeClass<I,S>::delNode (NodeCell<I,S> &n) {
 	return true;
 } 
 
-typedef LibAccess* S;
 
 int main() {
 	cout << "Let's start with the Program Execution \n\n";
 
 /////////// Creation of the Binary Tree	
-	S pAcc;
-	Prof p1("cicero");
-	pAcc = (LibAccess*) &p1;
-        NodeCell<int, S> p (0, pAcc);
+        staffRec[0] = (LibAccess*) new Prof ("cicero");
+        NodeCell<int, pS> p (0, staffRec);
 	
-	TreeClass<int, S> t(500, pAcc);
+	TreeClass<int, pS> t(500, staffRec);
 
 	cout << "And this is how the tree looks like :" << t <<"\n";
 /////////// Insertion of new Nodes - Test Case
 
 	for (int i=1; i < (sizeof(index_array)/sizeof(int)); i++)
 	  {
-	    Student s1 ("pinco pallo");
-	    NodeCell<int, S> n (
+	    // I am also building the staff Recrds
+	    staffRec[i] = (LibAccess*) new Student ("pinco pallo");
+
+	    // ... only here is pertinet for the Uni Lirary
+	    NodeCell<int, pS> n (
 				   index_array[i],
-				   (S) &s1);
+				   &staffRec[i]);
 	    if ( !(t.insertNew(n)) )
 	      return (1);   // failed test
 	  }
@@ -532,9 +537,9 @@ int main() {
         // test removing one node at the leaf
 	Student s2 ("pinco pallo");
 
-	NodeCell<int, S> d (
+	NodeCell<int, pS> d (
 			    652,
-			    (S) &s2);
+			    (pS) &s2);
 	if ( !(t.delNode(d)) )
 	  return (1);   // failed test 
 
@@ -553,6 +558,13 @@ int main() {
 	  return (1);   // failed test 
 
         cout << "Deleted old nodes:" << t << "\n";
+	// NOTE: as the tree belong to a separate entity
+	//       it is wrong to remove the record
+	//       also from the staff Record (i.e. staffRec[]
+	//       array, in this example), even if we might
+	//       have had access in this example.
+	//       In fact, only the node in the binary tree
+	//       has been removed in here  
 /////////// Program Closure - RegTest passed
 	return (0);   // test passed
 }
