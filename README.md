@@ -7,10 +7,10 @@ These small code samples are composed of different C++ class topics of interest 
 
 ## Exercises 
 The folders beneath this level are the following:
-- 	listExample	(single linked list structure, unordered)
--	listTemplate	(same as before, but using template in C++)
-
-
+- 	listExample	(single linked list structure, unordered). See README file in [here](/listExample/README.md)
+-	listTemplate	(same as before, but using template in C++). See README file in [here](/listTemplate/README.md)
+- treeClass: an example of Binary Search Tree (BST) using template format in C++. See README file in [here](/treeClass/README.md)
+- abstClass: an example of an abstract class using the template binary tree previously defined. See README file in [here](/abstClass/README.md)
 ## Compiling locally
 Assuming GCC v.11 and cmake already installed
 
