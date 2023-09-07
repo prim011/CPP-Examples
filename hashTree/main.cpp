@@ -517,7 +517,6 @@ int main() {
 
 	cout << "And this is how the tree looks like :" << t <<"\n";
 /////////// Insertion of new Nodes - Test Case
-
 	for (int i=1; i < (sizeof(index_array)/sizeof(int)); i++)
 	  {
 	    // I am also building the staff Recrds
@@ -532,7 +531,6 @@ int main() {
 	  }
 	
 	cout << "Added new nodes:" << t << "\n";
-
 /////////// Search and Deletion of old Nodes - Test Case
         // test removing one node at the leaf
 	Student s2 ("pinco pallo");
