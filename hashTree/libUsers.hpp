@@ -46,8 +46,9 @@ public:
  * to Students. It has been derived from the abstract
  * class LibAccess, which defines the interface to
  * the University Library as access premises, 
-and 
- * from which it will need to implement three methods.
+ * and from which it will need to implement four 
+ * methods. The class has been extended with a private
+ * hash function.
  */
 class Student: private LibAccess {
   string name;
@@ -100,7 +101,9 @@ class Student: private LibAccess {
  * to Professors. It has been derived from the abstract
  * class LibAccess, which defines the interface to
  * the University Library as access premises, and 
- * from which it will need to implement three methods.
+ * from which it will need to implement four methods.
+ * The class has been extended with a dedicated Hash 
+ * function
  */
 class Prof: private LibAccess {
   string name;
