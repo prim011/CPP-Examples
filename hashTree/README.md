@@ -1,20 +1,20 @@
 # Quick Reference for hash/Merkel Tree on Abstract Classes
 
-This quick example code implements a possible reference of the hash tree base onthe exmple reported into the Abstract Class example. Reusing most of the the implementation in there, we will have to extend some of the field in order to address the solution to this excercise
+This quick example code implements a possible reference of the hash tree based on the example reported in the Abstract Class section. Reusing most of the implementation in there, we will have to extend some of the fields to address the solution to this exercise
 
 ## Problem to solve
 
-Instead of focusing on interface between a databse of Students/Professors and a University Library, we are here more interested in the *integrity of the data* stored in database centre; so, no interfaces as the main goal. 
+Instead of focusing on the interface between a database of Students/Professors and a University Library, we are more interested in the *integrity of the data* stored in the database centre. 
 
-## How to solve the excircise
+## How to solve the exercise
 
-We will be using a data structure called hash (or Merkel) tree to preserve and check on the data integrity information. But, before entering into the details of what a Merkel Tree is. Let's explain some of the implementation details we used for this excercise.
+We will be using a data structure called a hash (or Merkel) tree to preserve and check on the data integrity information. The Merkel Tree use the hash at each node of the tree to preserve data integrity. More information is in the following subsections. Let's explain some of the implementation details we used for this exercise.
 
-- used a conventional binary tree to store the information of Students/Professors. This is not likly to be the case in real life, because a database is likly to used, instead. But we had to use a data structure to store the data anad the ninary tree explaned in previous example makes perfect sense and a safe of reuse
-- used abstract classes. This time with the goal of providing informationrelated to the record (either Student or Professor), but for the internal use of the Merkel Tree. Therefore the abstract class will still gave the ability to incorporate entities of different kinds - such as Stundet and Professor classes -, but the class will need to be slightly adjusted for the benetift of this excersise. In particular, we will need to include a new field which is named _hashRec_ and it is the result of a hash fuction for the record in question. That hash value will be used in the Markel tree at the leaf nodes  
+- used abstract classes. This time to provide information related to the record (either Student or Professor), but for the internal use of the Merkel Tree. Therefore the abstract class will still give the ability to incorporate entities of different kinds - such as Stundet and Professor classes -, but the class will need to be slightly adjusted for the benefit of this exercise. In particular, we will need to include a new field which is named _hashRec_ which is the result of a hash function for the record in question. That hash value will be used in the Markel tree at the leaf nodes  
 
-- An additional tree is used for data integrity: the Merkel tree 
+- The Hash function in the LibClass uses the name and the record number as entries to the hash function
 
+- During the creation of the tree we have used deliberately the same name for students populating the tree so that we can also check on the hash function consistency to provide a different result, due to the registration number, which is necessarily different.
 
 ## The use of the Binary tree in a template format 
 
