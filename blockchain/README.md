@@ -30,7 +30,7 @@ _NOTE:_ the tree relies on this abstract implementation to get the hash of the l
 
 For the benefit of this exercise we have included only one Prof, at the root and some other students down below. The two classes 
 
-During the tree construction, in the `main()` function, the same for the students has been decided, so that the only differentiation on the Hash input is the sequence/serial number. We will realise that, even in this constrained scenario, the Hash() function works pretty well on differentiating the data structure, and ultimately the tree fingerprint,
+During the tree construction, in the `main()` function, the same for the students has been decided, so that the only differentiation on the Hash input is the sequence/serial number. We will realise that, even in this constrained scenario, the Hash() function works pretty well on differentiating the data structure, and ultimately the tree fingerprint.
 
 
 ### The Tree fingerprints
@@ -76,6 +76,9 @@ For reference, here is the implementation of the `integrityCheck()` function:
 	}
 `
 
+Finally here is a snapshot of the program outcome 
+
+
 ## The use of the Binary tree and the Linked list in a template format 
 
 It makes it easy to reuse the work done in other exercises for this specific example. The format to accept any type of node structure makes the extension to the abstract class very easy.  The user can define the node completely independently at run time. The only constraint is related to the implicit need for the _index_ field to satisfy some order, typically with the overload of the '< > = ' operators. This index is typically different from the serial number of the users, as the index is a control field for the binary tree and the serial number can be used for checking the user identity, instead.
@@ -93,8 +96,34 @@ Please refer to the treeTemplate example for more information about the binary t
 
 There is also a quick example on `main()` function on how to use the `TreeClass<>` object, a small exercise on including nodes, searching dedicated nodes and removing them. The same code is also used as a regression test in the `.yml` file for the Continuous Integration (CI). This is why the `main()` function returns 0 or 1 according to the successful, or unsuccessful, completion of the tasks.
 
-
 Lastly, the implementation of the linked list as a template, it makes simple to generalise the node structure with `time_t` and `size_t`, for the timestamp and the hash respectively. 
+
+`
+TREE PRINTOUT - root: 0x556aafd7f420->200
+History - # events:19
+=============
+
+	 timestamp: 2161	 tree hash signature: 10017358640617697391
+	 timestamp: 2217	 tree hash signature: 5478620386116794781
+	 timestamp: 2240	 tree hash signature: 15278470924917836461
+	 timestamp: 2263	 tree hash signature: 8941924468534910893
+	 timestamp: 2286	 tree hash signature: 8941924468534910905
+	 timestamp: 2309	 tree hash signature: 5478620386116794781
+	 timestamp: 2332	 tree hash signature: 8941924468534910877
+	 timestamp: 2355	 tree hash signature: 11813688941146856373
+	 timestamp: 2379	 tree hash signature: 5478620386116794821
+	 timestamp: 2403	 tree hash signature: 8941924468534910821
+	 timestamp: 2427	 tree hash signature: 8941924468534910845
+	 timestamp: 2451	 tree hash signature: 11813688941146856325
+	 timestamp: 2476	 tree hash signature: 8941924468534910757
+	 timestamp: 2501	 tree hash signature: 8941924468534910829 <--+
+	 timestamp: 2528	 tree hash signature: 8941924468534910797    |--same tree structure
+	 timestamp: 2643	 tree hash signature: 8941924468534910829 <--+ 
+	 timestamp: 2670	 tree hash signature: 3186359960298042465
+	 timestamp: 2697	 tree hash signature: 6612012521036440939
+	 timestamp: 2727	 tree hash signature: 12449989354134733581
+`
+
 
 The code has been written for C++11, but there is no clear dependency and can be compiled on other toolchains, but we have not tested it.
 
@@ -112,5 +141,5 @@ Then successive builds like that:
 `$ cmake --build . `
 
 The name of the file to compile and the project are identified in the `CMakeLists.txt` file. 
-Output is the executable `myexample` generated after the build.
+Output is the executable `myBlockchainExample` generated after the build.
 

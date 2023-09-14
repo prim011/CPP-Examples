@@ -10,9 +10,9 @@ using namespace std;
 int index_array [] =
  {
    // whole set
-   //500, 300, 200, 118, 202, 350, 348, 600, 550, 548, 552, 650, 648, 352, 652
+   500, 300, 200, 118, 202, 350, 348, 600, 550, 548, 552, 650, 648, 352, 652
    // left branch + root
-   500, 300, 200, 118, 202, 350, 348, 352
+   //500, 300, 200, 118, 202, 350, 348, 352
    // right branch + root
    //500, 600, 550, 548, 552, 650, 648, 652
  };
@@ -166,18 +166,14 @@ public:
        size_t computeHash(size_t buffer, NodeCell<I,S> *r) {
 	 if (r == NULL)
 	   return 0;
+
 	 const size_t leftHash = computeHash(buffer, r->sx);
 	 //const size_t rightHash = computeHash(buffer, r->dx);
          const size_t rightHash = ( computeHash(buffer, r->dx) ?	\
-				    computeHash(buffer, r->dx) :	\
-				    leftHash );
-
+	 			    computeHash(buffer, r->dx) :	\
+	 			    leftHash );
 
 	 buffer = leftHash ^ (rightHash << 1);
-	 //buffer = leftHash + rightHash;
-	 cout << "Buffer :" << buffer
-	      << "left :" << leftHash
-	      << "right :" << rightHash << endl;
 
 	 if (r != NULL && buffer == 0)
 	   // case of tree only with root
@@ -573,8 +569,7 @@ int main() {
 	for (int i=1; i < (sizeof(index_array)/sizeof(int)); i++)
 	  {
 	    // I am also building the staff Recrds
-	    staffRec[i] = (LibAccess*) new Student
-	       ("pinco pallo " + to_string(i));
+	    staffRec[i] = (LibAccess*) new Student("pinco pallo ");
 
 	    // ... only here is pertinet for the Uni Lirary
 	    NodeCell<int, pS> n (
@@ -606,34 +601,37 @@ int main() {
 	  cout << "Integrity preserved\n";
 	else
 	  cout << " !! INTEGRITY COMPROMISED !! \n";
-	    
-
-	if ( !(t.delNode(d.changeIndex(352))) )
-	  return (1);   // failed test 
+        // NOTE: After this deletion the tree has the same
+	//       stucture than two steps before. This is
+	//       visible in the tree fingerprints history
 	
-
 	// test removing one node in the middle of the 
 	// right branch - using relinkLeft()
-	//if ( !(t.delNode(d.changeIndex(600))) )
-	//  return (1);   // failed test 
-
+	if ( !(t.delNode(d.changeIndex(600))) )
+	  return (1);   // failed test 
+        if (t.integrityCheck())
+	  cout << "Integrity preserved\n";
+	else
+	  cout << " !! INTEGRITY COMPROMISED !! \n";
+	    	
 	// test removing one node in the middle of the 
 	// left branch - using relinkRight()
 	if ( !(t.delNode(d.changeIndex(300))) )
 	  return (1);   // failed test 
+        if (t.integrityCheck())
+	  cout << "Integrity preserved\n";
+	else
+	  cout << " !! INTEGRITY COMPROMISED !! \n";
 
         // test removing the root - using relinkRoot()
 	if ( !(t.delNode(d.changeIndex(500))) )
 	  return (1);   // failed test 
+        if (t.integrityCheck())
+	  cout << "Integrity preserved\n";
+	else
+	  cout << " !! INTEGRITY COMPROMISED !! \n";
 
         cout << "Deleted old nodes:" << t << "\n";
-	// NOTE: as the tree belong to a separate entity
-	//       it is wrong to remove the record
-	//       also from the staff Record (i.e. staffRec[]
-	//       array, in this example), even if we might
-	//       have had access in this example.
-	//       In fact, only the node in the binary tree
-	//       has been removed in here  
 /////////// Program Closure - RegTest passed
 	return (0);   // test passed
 }
