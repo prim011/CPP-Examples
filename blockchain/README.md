@@ -98,18 +98,8 @@ There is also a quick example on `main()` function on how to use the `TreeClass<
 
 Lastly, the implementation of the linked list as a template, it makes simple to generalise the node structure with `time_t` and `size_t`, for the timestamp and the hash respectively. 
 
-`
-TREE PRINTOUT - root: 0x556aafd7f420->200
-History - # events:19
-=============
 
-	 timestamp: 2161	 tree hash signature: 10017358640617697391
-	 timestamp: 2217	 tree hash signature: 5478620386116794781
-	 timestamp: 2240	 tree hash signature: 15278470924917836461
-	 timestamp: 2263	 tree hash signature: 8941924468534910893
-	 timestamp: 2286	 tree hash signature: 8941924468534910905
-	 timestamp: 2309	 tree hash signature: 5478620386116794781
-	 timestamp: 2332	 tree hash signature: 8941924468534910877
+
 	 timestamp: 2355	 tree hash signature: 11813688941146856373
 	 timestamp: 2379	 tree hash signature: 5478620386116794821
 	 timestamp: 2403	 tree hash signature: 8941924468534910821
@@ -122,7 +112,7 @@ History - # events:19
 	 timestamp: 2670	 tree hash signature: 3186359960298042465
 	 timestamp: 2697	 tree hash signature: 6612012521036440939
 	 timestamp: 2727	 tree hash signature: 12449989354134733581
-`
+
 
 
 The code has been written for C++11, but there is no clear dependency and can be compiled on other toolchains, but we have not tested it.
