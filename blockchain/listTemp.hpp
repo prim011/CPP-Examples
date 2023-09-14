@@ -19,9 +19,14 @@ public:
 	// default constructor
 	HashCell () {index = 0; next = NULL;}   
 	// initialization contructor 
-	HashCell (I i, S s):index(i), hashValue(s) {next=NULL;}
+	HashCell (I i, S s):
+	  index(i),
+	  hashValue(s) { next=NULL; }
 	// copy constractor
-	HashCell (const HashCell& n):index(n.index),hashValue(n.hashValue),next(n.next) {}
+	HashCell (const HashCell& n):
+	  index(n.index),
+	  hashValue(n.hashValue),
+	  next(n.next) {}
 	// destructor: it release all resources linked to it! 
 	// set "next to NULL if you do not want to remove the rest of the nodes
 	~HashCell() {
@@ -42,9 +47,7 @@ public:
 	friend ostream& operator<< (ostream& os, const HashCell<I,S>& t) {	
 		os << "\n";
 		os << "\t timestamp: " << t.index;
-		os << "\t tree hash value: " << t.hashValue;
-		if (t.next)
-		 os << "\tnext ->: " << t.next->index << endl;
+		os << "\t tree hash signature: " << t.hashValue;
 		return os; 	
 	}
 };
@@ -77,6 +80,12 @@ public:
  	bool delNode (HashCell<I,S>&);		// equivalent of push the element out
  	HashCell<I,S>* searchItem (HashCell<I,S>&);	// search an item for its index
  	
+        HashCell<I,S>* findLast () {
+	  HashCell<I,S> *p = head;
+	  for (int i=1; i < nodeNum; i++, p=p->next) 
+	      ;
+	  return p;
+	}
  	// overload of the << operator
  	friend ostream& operator<< (ostream& os, const ListClass& t) {
  		const HashCell<I,S> *p=t.head;

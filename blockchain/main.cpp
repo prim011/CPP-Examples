@@ -1,6 +1,4 @@
 #include <iostream>
-#include <string>
-#include <sstream>
 #include <ctime>
 #include "libUsers.hpp"
 #include "listTemp.hpp"
@@ -12,9 +10,9 @@ using namespace std;
 int index_array [] =
  {
    // whole set
-    500, 300, 200, 118, 202, 350, 348, 352, 600, 550, 548, 552, 650, 648, 652
+   //500, 300, 200, 118, 202, 350, 348, 600, 550, 548, 552, 650, 648, 352, 652
    // left branch + root
-   //500, 300, 200, 118, 202, 350, 348, 352
+   500, 300, 200, 118, 202, 350, 348, 352
    // right branch + root
    //500, 600, 550, 548, 552, 650, 648, 652
  };
@@ -162,11 +160,10 @@ public:
  	bool insertNew (NodeCell<I,S>&);	 
  	bool delNode (NodeCell<I,S>&);	
  	NodeCell<I,S>* searchItem (NodeCell<I,S>&);
-
        
        // Computes the hash based on the children. If no right child
        // exists, reuse the left child's value
-       size_t computeHash(size_t &buffer, NodeCell<I,S> *r) {
+       size_t computeHash(size_t buffer, NodeCell<I,S> *r) {
 	 if (r == NULL)
 	   return 0;
 	 const size_t leftHash = computeHash(buffer, r->sx);
@@ -176,8 +173,11 @@ public:
 				    leftHash );
 
 
-	 //buffer = leftHash ^ (rightHash << 1);
-	 buffer = leftHash + rightHash;
+	 buffer = leftHash ^ (rightHash << 1);
+	 //buffer = leftHash + rightHash;
+	 cout << "Buffer :" << buffer
+	      << "left :" << leftHash
+	      << "right :" << rightHash << endl;
 
 	 if (r != NULL && buffer == 0)
 	   // case of tree only with root
@@ -186,6 +186,11 @@ public:
 	 return hash<size_t>{} (buffer);
        }
   
+        bool integrityCheck() {
+	  size_t buffer;
+	  return ( computeHash(buffer, root) ==
+		   (rHash.findLast()->hashValue) );
+	}
   
  	// overload of the << operator
  	friend ostream& operator<< (ostream& os, HTreeClass& t) {
@@ -549,7 +554,7 @@ bool HTreeClass<I,S>::delNode (NodeCell<I,S> &n) {
 	deletenode (n,root);
 	size_t buffer;
 	HashCell<time_t,size_t> tmp (clock(),
-				     computeHash (buffer, root));
+			     computeHash (buffer, root));
 	return rHash.insertNew(tmp);
 } 
 
@@ -568,7 +573,8 @@ int main() {
 	for (int i=1; i < (sizeof(index_array)/sizeof(int)); i++)
 	  {
 	    // I am also building the staff Recrds
-	    staffRec[i] = (LibAccess*) new Student ("pinco pallo");
+	    staffRec[i] = (LibAccess*) new Student
+	       ("pinco pallo " + to_string(i));
 
 	    // ... only here is pertinet for the Uni Lirary
 	    NodeCell<int, pS> n (
@@ -576,6 +582,13 @@ int main() {
 				   &staffRec[i]);
 	    if ( !(t.insertNew(n)) )
 	      return (1);   // failed test
+
+	    // check for integrity
+	    if (t.integrityCheck())
+	      cout << "Integrity preserved\n";
+	    else
+	      cout << " INTEGRITY COMPROMISED !! \n";
+	    
 	  }
 
 	cout << "Added new nodes:" << t << "\n";
@@ -587,12 +600,22 @@ int main() {
 			    652,
 			    (pS) &s2);
 	if ( !(t.delNode(d)) )
+	  return (1);   // failed test
+        // check for integrity
+        if (t.integrityCheck())
+	  cout << "Integrity preserved\n";
+	else
+	  cout << " !! INTEGRITY COMPROMISED !! \n";
+	    
+
+	if ( !(t.delNode(d.changeIndex(352))) )
 	  return (1);   // failed test 
+	
 
 	// test removing one node in the middle of the 
 	// right branch - using relinkLeft()
-	if ( !(t.delNode(d.changeIndex(600))) )
-	  return (1);   // failed test 
+	//if ( !(t.delNode(d.changeIndex(600))) )
+	//  return (1);   // failed test 
 
 	// test removing one node in the middle of the 
 	// left branch - using relinkRight()
