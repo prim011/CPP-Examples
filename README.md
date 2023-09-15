@@ -11,6 +11,9 @@ The folders beneath this level are the following:
 -	listTemplate	(same as before, but using template in C++). See README file in [here](/listTemplate/README.md)
 - treeClass: an example of Binary Search Tree (BST) using template format in C++. See README file in [here](/treeTemplate/README.md)
 - abstClass: an example of an abstract class using the template binary tree previously defined. See README file in [here](/abstClass/README.md)
+- hashTree: an example of the hash/Merkel tree using the _abstClass_ and _treeClass_ as starting point. See README file in [here](/hashTree/README.md)
+- blockchain: an example of how the Merkel tree can be used as fingerprint for data integrity and the history of the tree saved into a linked list. See this [link](/blockchain/README.md) for more details.
+
 ## Compiling locally
 Assuming GCC v.11 and cmake already installed
 
