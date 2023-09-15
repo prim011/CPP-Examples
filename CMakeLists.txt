@@ -14,6 +14,7 @@ add_subdirectory(listExample)
 add_subdirectory(listTemplate)
 add_subdirectory(treeTemplate)
 add_subdirectory(abstClass)
+add_subdirectory(hashTree)
 add_subdirectory(blockchain)
 
 enable_testing()
