@@ -1,4 +1,3 @@
-_
 # Quick Reference for Blockchain using HMAC
 
 
