@@ -1,6 +1,5 @@
 # Quick Reference for Blockchain using HMAC
 
-
 This quick example code implements a possible reference for blockchain implementation, which is a Merkel tree with history.
 
 The history has been saved in the form of a linked list, and each node in the list is created when certain actions - such as insert and delete - in the Merkel tree have been taken, with a timestamp of when those actions have occurred.
@@ -62,7 +61,7 @@ During the tree construction, in the `main()` function, the same name for the st
 #### Rearchitecting the Classes
 Since we have identified the Hash function as a module we want to expand on, it is appropriate to give more modularity and flexibility. Here is how we would like to rearchitect the module:
 
-_High-`Level Architecture (abstract classes):_
+_High-Level Architecture (abstract classes):_
 
 	              Class LibAccess {                      Class HashFunctions {
 				    virtual size_t getHash () = 0;         virtual size_t formHash(LibAccess*) = 0;
