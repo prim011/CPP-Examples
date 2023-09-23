@@ -1,4 +1,4 @@
-
+_
 # Quick Reference for Blockchain using HMAC
 
 
@@ -11,34 +11,34 @@ This example is an enhancement of the hashTree example which has been presented 
 
 ## Problem to solve
 
-In contrast with the example in the previous serction in [blockchain](../blockchain/README.md), in here we are not only interested in the integrity of the data but also to the data origin authenticarion, as well as  the tree history.
+In contrast with the example in the previous section in [blockchain](../blockchain/README.md), here we are not only interested in the _integrity of the data_ but also in the _data origin authentication_, as well as the tree history.
 
 From what we have seen in the past, the best candidate for the tree fingerprint is the tree hash itself. Therefore storing the variable to a concatenated list seems a good idea for memorizing the tree's history. But The other information to store - apart from a link to the successor node - is a timestamp when that vital tree structure operation did take place. We can think of only two of those operations: when inserting a new node and/or when removing an old node. 
 
 ## Data integrity vs Data Origin authentication
 
-It is important to spell out the difference between these two concepts at this point, as the comprehansion of the applied changes will be easier.
+It is important to spell out the difference between these two concepts at this point, as the comprehension of the applied changes will be easier.
 
-From the high level concept data origin authentication is stronger than data integrity. In particlar, the former does include the latter. In other words, if we have data origin autherntication, then we also have data integrity. More precisly, data origin autherntication is data integrity with the extra property of assurance of the identy of the original source of the data.
+From a high-level view, the concept of _data origin authentication_ is stronger than _data integrity_. In particular, the former does include the latter. In other words, if we have data origin authentication, then we also have data integrity. More precisely, data origin authentication is data integrity with the extra property of assurance of the identity of the original source of the data.
 
 But why introducing this add-on concept and why do we need it?
 
-For a second, think of how we have achieved data integrity in the blockcahin example: by using an hash function with a combination for fields coming from the NodeCell record, such as name and serial number.
+For a second, think of how we have achieved data integrity in the blockchain example: by using a hash function with a combination of fields coming from the NodeCell record, such as name and serial number.
 
-If we where to consider to transmit the tree information from point A (Alice) to point B (Bob) and assuming we are in Bob's shoes, we would not have any assurance that the data would have come exactrly from Alice. We could receive a reassurance on the data integrity, but there is no reassurance on who is sending the data. Even without necessarly sending the message (i.e. the tree information), we might want to deposit a sign from where the message is originally coming from. This can be further extended to the concept of digital signature, which has an additional attribute on the one we described: non-repudiation (neaning that whoever has digitally signed the messaged can not repudiate that action, becuase from the signature it is possible to trace the author/owner; there is a _strong_ association between data authenticated and identity of the author/owner). But without transgressing too much on the digital signature, in data authentication we happy if we have a _weak_ reassurance that the data that is coming from a valid source.
+If we were to consider transmitting the tree information from point A (Alice) to point B (Bob) and assuming we were in Bob's shoes, we would not have any assurance that the data had come exactly from Alice. We could receive reassurance on the data integrity, but there is no reassurance on who is sending the data. Even without necessarily sending the message, we might want to encapsulate a sign from where the message is originally coming from. This can be further extended to the concept of digital signature, which has an additional attribute to the one we described: non-repudiation (meaning that whoever has digitally signed the message can not repudiate that action, because from the signature it is possible to trace the author/owner; there is a _strong_ association between data authenticated and identity of the author/owner). But without transgressing too much on the digital signature, in data authentication, we are happy if we have a _weak_ reassurance that the data is coming from a valid source.
 
-For this we have to introduce a complete new concept: we have to introduce the concept of keys. In particular data authentication uses symmetric keys and digital singature uses asymetric keys mechanism in a public key infristructure (PKI) environment.
+For this, we have to introduce a completely new paradigm: the concept of keys. In particular data authentication uses symmetric keys and digital signature uses an asymmetric key mechanism in a public key infrastructure (PKI) environment.
 
-So let's focus on symmetric keys and data authentication: Alice send (or share) to (with) Bod a key. The key is used by Alice to create the digested message, it does not need to be encrypted. Bob receive the digest message and thanks to the key that was previously shared reconizes that ot does come from Alice. The function in and out used is the **HMAC** or **H**ash-based **M**essage **A**uthentication **C**ode. 
+So let's focus on symmetric keys and data authentication: Alice sends (or shares) to (with) Bod a key. The key is used by Alice to create the digested message, it does not need to be encrypted. Bob receives the digest message and thanks to the key that was previously shared recognizes that the message does come from Alice. The function in and out used is the **HMAC** or **H**ash-based **M**essage **A**uthentication **C**ode. 
 
 ### Symmetric Key and ownership
-A sensible owner of the symmetric key seems to be at the structure level: at the tree level. In fact, it would not make too much sense to bure the key into the node level as it is not where it used for. But this decision comes with some redesign which will be addressed in the next section. Key genaration can be assisted with the crypto++ function with the following Pseudo-Random Number Genration (PRNG) as follow:
+A sensible owner of the symmetric key seems to be at the structure level: at the tree level. It would not make too much sense to bure the key into the node level as it is not where it is used. But this decision comes with some redesign which will be addressed in the next section. Key generation can be assisted with the crypto++ function with the following Pseudo-Random Number Generation (PRNG) as follow:
 
 	SecByteBlock key(16);
 	prng.GenerateBlock(key, key.size());
 	
 
-
+In this example, we are using an artificial key stored in memory. This is just to illustrate the mechanism; in real life, keys are unlikely to be stored as clearly and plainly as in this example. They normally require hardware support, such as Hardware Security Modules (HSM)
 
 
 ## How to solve the exercise
@@ -54,18 +54,16 @@ The tree class is composed of two major information block
 
 ### The tree nodes
 
-The abstract class described in _libUsers.hpp_ has been taken from previous examples and offers the advantages of abstracting two other classes - Students and Profs - with the only variation to add a dedicated Hash function, `Student::formHash()` and `Prof::formHash()` respectively. Both implementations, in this example, are the same, but in theory, could have been different for each class. The function is relatively simple and takes two fields, _index_ and _name_, as input to the Hash256 (SHA-3) standard template library function. Those two functions are abstracted by the LibAccess Class, which is ultimately used in the hash tree.
-
-_NOTE:_ The tree relies on this abstract implementation to get the hash of the leaf nodes in the markel tree implementation and use them to combine and form that unique fingerprint which is specific to the tree structure, as we will see later in the next chapter.
+The abstract class described in _libUsers.hpp_ has been taken from previous examples and offers the advantages of abstracting two other classes - Students and Profs - with the only variation to add a dedicated Hash function, `Student::formHash()` and `Prof::formHash()` respectively. Both implementations, in this example, are the same; that is why we wanted to abstract the `HashFunctions` class. The low-level function implementing the virtual method is relatively simple in the `HMAC_SH3` derived class and takes two fields, the _key_ coming from the tree structure and a pointer to the node (in the abstract mode of `LibAccess`[2]). This last parameter will allow to reach _index_ and _name_, which are used as input to the Hash256 (SHA-3) standard template library function. 
 
 For the benefit of this exercise, we have included only one Prof, at the root and some other students down below.
 
 During the tree construction, in the `main()` function, the same name for the students has been chosen, so that the only differentiation on the Hash input is the sequence/serial number. We will realise that, even in this constrained scenario, the Hash() function works pretty well on differentiating the data structure, and ultimately the tree fingerprint.
 
-#### Reaccitecting the Classes
-Since we have identified the Hash function a module we want to expand an therefore give more flexibity. Here is how we would like to rearchitect the module:
+#### Rearchitecting the Classes
+Since we have identified the Hash function as a module we want to expand on, it is appropriate to give more modularity and flexibility. Here is how we would like to rearchitect the module:
 
-_High Level Architecture (abstract classes):_
+_High-`Level Architecture (abstract classes):_
 
 	              Class LibAccess {                      Class HashFunctions {
 				    virtual size_t getHash () = 0;         virtual size_t formHash(LibAccess*) = 0;
@@ -87,10 +85,10 @@ _Low-Level Architecture:_
 														   }
 												         };                                                 
 
-This rearchitecture allows now to abstarct a class function related to the Hash, but also be more specific in respect of the implementation of the Hash function at the low level, with HMAC_SH3, without necessarily diplicate the efforts in the two classes that use the Hash function, Stundent and Prof.
+This re-architecture allows now to abstract a class function related to the Hash, but also be more specific concerning the implementation of the Hash function at the low level, with the `HMAC_SH3` class. This is achieved without necessarily duplicating the efforts in the two classes that use the Hash function, Student and Prof.
 
 
-Another advantanteged gained is that we could define which Hash fuction any given class should use at the initialization time. In fact, by default we use the HMAC_SH3, but in theory we could use another Hash family function by adding a new module equivalent to the `hmac.hpp`. Here are the two constructors for each classes:
+Another advantage gained is that we could define which Hash function any given class should use at the initialization time. In fact, by default, we use the HMAC_SH3, but in theory, we could use another Hash family function by adding a new module equivalent to the `hmac.hpp`. Here are the two constructors for each class:
 
 	Prof (string s): name(s), serialNP(++profSerialNum), active(true) {
     pHash = (HashFunctions*) new HMAC_SH3();
@@ -102,7 +100,7 @@ Another advantanteged gained is that we could define which Hash fuction any give
     pHash = p;
 	}
 
-The first one is used in our example here. The second one could be used in case we want to define another Hash function for the future, for example one based on Post-Quantum Chryptography (PQC) algorithms.
+The first one is used in our example here. The second one could be used in case we want to define another Hash function for the future, for example, one based on Post-Quantum Cryptography (PQC) algorithms.
 
 ### The Tree fingerprints
 
@@ -110,7 +108,7 @@ As already discussed, the fingerprints for the hash tree have been determined by
 
 ` size_t computeHash(size_t buffer, NodeCell<I,S> *r) `
 
-within the `HTreeClass`. In there the value coming from the implemented abstract class `formHash()` - either Student or Prof - is used to combine a sequence in each of the branches, on the right and the left, and then calculated together as an input to another Hash256 (SHA-3) function to create the unique tree's fingerprint for a given data structure configuration of the tree. In fact, it is fair to assess the following:
+within the `HTreeClass`. In there the value coming from the implemented abstract class `formHash()` - either Student or Prof - is used to combine a sequence in each of the branches, on the right and the left, and then calculated together as an input to another Hash256 (SHA-3) function to create the unique tree's fingerprint for a given data structure configuration of the tree. It is fair to assess the following:
 
 - the fingerprint is different for each tree's node configuration
 - Given the **same** tree structure in two **different times**, its fingerprint has to coincide.
@@ -148,16 +146,16 @@ For reference, here is the implementation of the `integrityCheck()` function:
  
 
 ### The symmetric key for the HMAC
-As we discussed in the privious section, the key's owner has to be necessarily the tree structure. Therefore an additional variable has been declared which will be created at the Tree constructors and passed down to the lover level at the abstract class `LibAccess` to be used in the HMAC function for their own class. 
+As we discussed in the previous section, the key's owner has to be necessarily the tree structure. Therefore an additional variable has been declared which will be created at the Tree constructors and passed down to the lover level at the abstract class `LibAccess` to be used in the HMAC function for their class. 
 
-For the benefit of this example we have placed the key in the constant area. In reality the key should be managed more carefully: ideally stored and retreived in a Hardware Security Module (HSM).
+For the benefit of this example, we have placed the key in the constant area. In reality, the key should be managed more carefully: ideally stored and retrieved in a Hardware Security Module (HSM).
 
 The HMAC used is the one from crypto++[^1] with the following definition:
 
 	Digest<HMac<SHA256>>      digest;
 	HMAC< SHA256 >            hmac;
 
-And used as follow, in creating the digest:
+And used as follows, in creating the digest:
 
 	hmac.hash("This is the Key", "This is the message", digest);
 
@@ -228,3 +226,4 @@ Output is the executable `myBlockchainExample` generated after the build.
 
 
 [^1]: see link in [here](https://www.cryptopp.com/wiki/HMAC) and [here](https://www.cryptopp.com/docs/ref/class_h_m_a_c.html)
+[^2]: The tree structure relies on this abstract implementation to get the hash of the leaf nodes in the markel tree implementation and use them to combine and form that unique fingerprint which is specific to the tree structure, as we will see later in the next chapter
