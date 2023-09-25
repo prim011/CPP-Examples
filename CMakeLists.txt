@@ -16,6 +16,7 @@ add_subdirectory(treeTemplate)
 add_subdirectory(abstClass)
 add_subdirectory(hashTree)
 add_subdirectory(blockchain)
+add_subdirectory(hmac)
 
 enable_testing()
 

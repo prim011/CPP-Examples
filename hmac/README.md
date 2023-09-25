@@ -133,8 +133,8 @@ within the `HTreeClass`. In there the value coming from the implemented abstract
 
 In particular, we will prove both points in this exercise. The first one, while creating/building the tree from scratch, we will notice the fingerprint is always changing. The second point is demonstrated by inserting a leaf node, as last and then immediately removing it at the next action. The reader would agree that the tree node structure configuration is the same before the last leaf node is inserted and after the same node has been removed. So the expectation is that the tree's fingerprint remains the same, although two distinctive operations have been carried out which forced to recalculate the tree's fingerprint. See the output in this example:
 
-`
-TREE PRINTOUT - root: 0x55c2d58fb320->548
+
+	TREE PRINTOUT - root: 0x55c2d58fb320->548
 	History - # events:19
 	=============
 
@@ -157,15 +157,17 @@ TREE PRINTOUT - root: 0x55c2d58fb320->548
 	 timestamp: 3393	 tree hash signature: 11812211215293840881
 	 timestamp: 3469	 tree hash signature: 7489503316864784930
 	 timestamp: 3505	 tree hash signature: 3166795418435728799
-`
+
 
 This is all fine for checking the tree's integrity. But what about the history? For this, we have used a linked list, whose nodes are formed by the tree's fingerprint at a specific time and the timestamp of when the fingerprint has changed. Now, for what we said before there are only two operations which will force a tree's fingerprint change: the insertion and the deletion with the functions `insertNew` and `delNode` respectively. In fact, in those two functions the following code has been added:
 
-`
+
+	...
 	HashCell<time_t,size_t> tmp (clock(),
 				     computeHash (buffer, root));
 	return rHash.insertNew(tmp);
-`
+	}
+
 
 These lines will make sure that the tree's hash/fingerprint is recalculated - in the first line -, and it has been used to increment the _history_ linked list which is part of the tree private control structure/variable `rHash`  
   

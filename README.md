@@ -12,7 +12,8 @@ The folders beneath this level are the following:
 - treeClass: an example of Binary Search Tree (BST) using template format in C++. See README file in [here](/treeTemplate/README.md)
 - abstClass: an example of an abstract class using the template binary tree previously defined. See README file in [here](/abstClass/README.md)
 - hashTree: an example of the hash/Merkel tree using the _abstClass_ and _treeClass_ as starting point. See README file in [here](/hashTree/README.md)
-- blockchain: an example of how the Merkel tree can be used as fingerprint for data integrity and the history of the tree saved into a linked list. See this [link](/blockchain/README.md) for more details.
+- Blockchain: an example of how the Merkel tree can be used as fingerprint for data integrity and the history of the tree saved into a linked list. See this [link](/blockchain/README.md) for more details.
+- Blockchain with HMAC: an example introducing symmetric keys with **HMAC** or **H**ash-based **M**essage **A**uthentication **C**ode. Furthermore a rearchitecture of the C++ code was necessary in order to provide modulaity and flexibility to the `HashFunctions()` abstract class. See more details in [here](/hmac/README.md).
 
 ## Compiling locally
 Assuming GCC v.11 and cmake already installed
