@@ -22,7 +22,6 @@ class Student: private LibAccess {
   string name;
   int    serialNS;
   bool   active;
-  size_t seed;
   HashFunctions *pHash;
 
   // Custom specialization hash 
@@ -32,15 +31,15 @@ class Student: private LibAccess {
  public:
   Student() { serialNS = 0; pHash = NULL;
               active = false; seed = 0; name=""; }
-  Student (size_t sd, string s): name(s),
-			       serialNS(++studentSerialNum),
-			       active(true), seed(sd) {
+  Student (string s): name(s),
+		      serialNS(++studentSerialNum),	             
+		       active(true) {
     pHash = (HashFunctions*) new HMAC_SH3();
   }
-  Student (size_t sd, string s,
+  Student (string s,
 	   HashFunctions * & p): name(s),
 				 serialNS(++studentSerialNum),
-				 active(true), seed (sd) {
+				 active(true) {
     pHash = p;
   }
   ~Student() { delete pHash; }
@@ -51,7 +50,12 @@ class Student: private LibAccess {
   int  getSerialN () { return serialNS; }
   size_t getHash () { return formHash(); }
 
-  void operator= (Student &b) {
+  void commissionClass (size_t k) {
+    seed = k;
+    cout << "\nStudentClass succesfully Commissioned \n";
+  } 
+
+  void operator= (const Student &b) {
     name = b.name;
     serialNS = b.serialNS;
     active = b.active;

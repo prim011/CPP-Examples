@@ -30,13 +30,32 @@ For this, we have to introduce a completely new paradigm: the concept of keys. I
 So let's focus on symmetric keys and data authentication: Alice sends (or shares) to (with) Bob a key. The key is used by Alice to create the digested message, it does not need to be encrypted. Bob receives the digest message and thanks to the key that was previously shared recognizes that the message does come from Alice. The function used for data authentication (without encryption) is the **HMAC** or **H**ash-based **M**essage **A**uthentication **C**ode. 
 
 ### Symmetric Key and ownership
-A sensible owner of the symmetric key seems to be at the tree structure level. It would not make too much sense to bure the key into the node level as they are not the owners. But this decision comes with some redesign which will be addressed in the next section. Key generation can be assisted with the crypto++ function with the following Pseudo-Random Number Generation (PRNG) as follow:
+A sensible owner of the symmetric key seems to be at the tree structure level. It would not make too much sense to bure the key into the node level as they are not the owners. But this decision comes with some redesign which will be addressed in the next section. Key generation can be assisted with the following Pseudo-Random Number Generation (PRNG) as follow:
 
-	SecByteBlock key(16);
-	prng.GenerateBlock(key, key.size());
-	
+	// initialise PRNG for key generation
+	srand(time(0));
+	// use PRNG to extract a pseudo-random value
+	// for our symmetric key 
+	key = rand();	
 
-In this example, we are using an artificial key stored in memory. This is just to illustrate the mechanism; in real life, keys are unlikely to be stored as clearly and plainly as in this example. They normally require hardware support, such as Hardware Security Modules (HSM)
+This is just to illustrate the mechanism; in real life, keys are unlikely to be stored as clearly and plainly as in this example. They normally require hardware support, such as Hardware Security Modules (HSM).
+
+Nevertheless, special attention has been given not to share the value contained in the varaible `key` publicly outside the class. The use of `getKey()` member function is only private, so it can not be publically used. This approach has had some bearing on how the software has been organized and architected. In particular one public member fuction has been defined each time a new Node in the tree is created to commission the nodes itself without exposing the key value. 
+
+	 NodeCell<I,S>* commissionObject (I i, pS &obj) {
+	   NodeCell<I,S> *p= new NodeCell<I,S> (getKey(), i, obj);
+	   p->commissionNode(getKey());
+	   return p;
+	 }
+
+This means commissioning the Nodes at the tree level and passing the key value to `LibAccess` abstarct class with the dedicated visrtual member class:
+
+	 virtual void commissionClass (size_t) = 0;
+
+where `seed` is a protected variable; therefore, the `Student` and `Prof` derived classes inherit the variable; but it is not visible outside the classes. Each class then has their own implementation of the `commissionClass()` function which will in stall the value into `seed`.
+
+It is important to distiguish the creation of the class from the commitioning of it; hence the separation of the two activity which in `commissionObject()` happened immediately after; but that might not be the case necessarily.
+
 
 
 ## How to solve the exercise
@@ -63,11 +82,11 @@ Since we have identified the Hash function as a module we want to expand on, it 
 
 _High-Level Architecture (abstract classes):_
 
-`
-Class LibAccess {                      Class HashFunctions {
-				    virtual size_t getHash () = 0;         virtual size_t formHash(LibAccess*) = 0;
-				  };                                     };
-`
+
+	Class LibAccess {                      Class HashFunctions {
+	    virtual size_t getHash () = 0;         virtual size_t formHash(LibAccess*) = 0;
+	};                                     };
+
 _Mid-Level Architecture:_
                                                                           
 	Class  Prof: public LibAccess {         
@@ -172,18 +191,16 @@ For reference, here is the implementation of the `integrityCheck()` function:
 ### The symmetric key for the HMAC
 As we discussed in the previous section, the key's owner has to be necessarily the tree structure. Therefore an additional variable has been declared which will be created at the Tree constructors and passed down to the lover level at the abstract class `LibAccess` to be used in the HMAC function for their class. 
 
-For the benefit of this example, we have placed the key in the constant area. In reality, the key should be managed more carefully: ideally stored and retrieved in a Hardware Security Module (HSM).
-
-The HMAC used could be the one from crypto++[^1] with the following definition:
+Had we wanted to use the crypto++[^1], the HMAC could have looked like the following definition:
 
 	Digest<HMac<SHA256>>      digest;
 	HMAC< SHA256 >            hmac;
 
-And used as follows, in creating the digest:
+and used as follows, in creating the digest:
 
 	hmac.hash("This is the Key", "This is the message", digest);
 
-In this experiment we have used our own definition.
+In this experiment we have used our own definition using `rand()` and `srand()`.
 
 ## The use of the Binary tree and the Linked list in a template format 
 

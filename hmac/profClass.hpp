@@ -22,7 +22,6 @@ class Prof: private LibAccess {
   string name;
   int    serialNP;
   bool   active;
-  size_t seed;
   HashFunctions *pHash;
 
   // Custom specialization hash 
@@ -33,14 +32,14 @@ class Prof: private LibAccess {
 public:
   Prof () { serialNP = 0; active = false;
             seed = 0; pHash = NULL; name=""; }
-  Prof (size_t sd, string s): name(s),
-			      serialNP(++profSerialNum),
-			      active(true), seed(sd) {
+  Prof (string s): name(s),
+		   serialNP(++profSerialNum),		 
+		   active(true) {
     pHash = (HashFunctions*) new HMAC_SH3();
   }
-  Prof (size_t sd, string s, HashFunctions* & p): name(s),
-						  serialNP(++profSerialNum),
-						  active(true), seed(sd) {
+  Prof (string s, HashFunctions* & p): name(s),
+				       serialNP(++profSerialNum),
+				       active(true) {
     pHash = p;
   }
   ~Prof () { delete pHash; }
@@ -50,6 +49,11 @@ public:
   bool getPermit () { return active; }
   int  getSerialN () { return serialNP; }  
   size_t getHash () { return formHash(); }
+
+  void commissionClass (size_t k) {
+    seed = k;
+    cout << "\nProClass succesfully Commisioned \n";
+  } 
 
   void operator= (Prof &b) {
     name = b.name;

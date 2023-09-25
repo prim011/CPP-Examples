@@ -14,6 +14,8 @@ using namespace std;
  * library
  */
 class LibAccess {
+protected:
+  size_t seed;
 public:
   // virtual methods (to be implemented by derived classes)
   // Assuming this is all we need to (digitally)
@@ -22,6 +24,7 @@ public:
   virtual bool getPermit () = 0;
   virtual int getSerialN () = 0;
   virtual size_t getHash () = 0;
+  virtual void commissionClass (size_t) = 0;
   
   // printing out method specific for this class
   friend ostream& operator<< (ostream& os, LibAccess &l)
