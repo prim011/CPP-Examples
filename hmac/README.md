@@ -84,7 +84,7 @@ _High-Level Architecture (abstract classes):_
 
 
 	Class LibAccess {                      Class HashFunctions {
-	    virtual size_t getHash () = 0;         virtual size_t formHash(LibAccess*) = 0;
+	    virtual string getHash () = 0;         virtual string formHash(LibAccess*) = 0;
 	};                                     };
 
 _Mid-Level Architecture:_
@@ -97,7 +97,7 @@ _Mid-Level Architecture:_
 _Low-Level Architecture:_                                                              
                                                                                     
 	                                                     Class HMAC_SH3: public HashFunctions {
-									                       size_t formHash(LibAccess *p) {
+									                       string formHash(LibAccess *p) {
 														   ...
 														   ...
 														   }
@@ -124,7 +124,11 @@ The first one is used in our example here. The second one could be used in case 
 
 As already discussed, the fingerprints for the hash tree have been determined by the function:
 
-` size_t computeHash(size_t buffer, NodeCell<I,S> *r) `
+	string fingerPrint()
+	
+which is calling 
+
+	string computeHash(string& buffer, NodeCell<I,S> *r) 
 
 within the `HTreeClass`. In there the value coming from the implemented abstract class `formHash()` - either Student or Prof - is used to combine a sequence in each of the branches, on the right and the left, and then calculated together as an input to another Hash256 (SHA-3) function to create the unique tree's fingerprint for a given data structure configuration of the tree. It is fair to assess the following:
 
@@ -202,7 +206,11 @@ and used as follows, in creating the digest:
 
 	hmac.hash("This is the Key", "This is the message", digest);
 
-In this experiment we have used our own definition using `rand()` and `srand()`.
+In this experiment we have used our own definition using `rand()` and `srand()`, for the key generation and for the HMAC we use two different implemetation:
+- Internally generate
+- Coming externally from a dedicated library
+
+to witch between the two implemetation in the `CMakeList.txt` file toggle the STD_HMAC option to switch from one to the other (default is the external option).
 
 ## The use of the Binary tree and the Linked list in a template format 
 

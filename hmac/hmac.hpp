@@ -49,9 +49,9 @@ public:
     cout << "HMAC: " << tmp << endl;
 #endif
     return ss_result.str();
+
 #else // STD_HMAC
-    
-    
+
     return (to_string( seed ^=
 	    hash<string>{}(p->getName()) +
 	    hash<int>{}(p->getSerialN()) +

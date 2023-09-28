@@ -10,19 +10,27 @@ project(MyProject
 )
 
 
-# Include this definition for the externally defined HMAC
-# Example of subtree inclution:
-#   $ git subtree add --prefix hmac/hmac_sha256 <URL> <branch> --squash
-#add_compile_definitions(STD_HMAC)
+# Define STD_HMAC to include externally defined HMAC
+# Example:
+#  option(STD_HMAC "Include HMAC in External Library" TRUE)
+# or use the internal implementation with this:
+#  option(STD_HMAC "Include HMAC in External Library" FALSE)
+option(STD_HMAC "Include HMAC in External Library" TRUE)
 
+if (STD_HMAC)
+  # instruct hmac.hpp to take the proper #ifdef
+  add_compile_definitions(STD_HMAC)
+endif()
+
+# Create the executable
+add_executable(myHMACExample main.cpp)
 
 if (STD_HMAC)
   # include the compilation of the subtree
   add_subdirectory(hmac_sha256)
+  # include the library into the linking process
   target_link_libraries(myHMACExample LINK_PUBLIC hmac_sha256)
-endif()  
-# Create the executable
-add_executable(myHMACExample main.cpp)
+endif()
 
 set(CMAKE_BUILD_TYPE Debug)
 
@@ -30,3 +38,4 @@ enable_testing()
 
 add_test(NAME HMACTest
             COMMAND myHMACExample)
+unset(STD_HMAC CACHE)
