@@ -12,7 +12,7 @@ using namespace std;
 
 // index array used to tree node insertion.
 int index_array [] =
- {
+ {   
    500, 300, 200, 118, 202, 350, 348,
    600, 550, 548, 552, 650, 648, 352, 652
  };
@@ -140,7 +140,7 @@ private:
 	NodeCell<I,S>  *root;	// point to the root element
         // to save the history of the hashes we use the list
 
-        ListClass<clock_t, size_t> rHash;
+        ListClass<clock_t, string> rHash;
 
         // Symmetric Key for the HMAC
         size_t key; 
@@ -210,30 +210,51 @@ public:
  	bool delNode (NodeCell<I,S>&);	
  	NodeCell<I,S>* searchItem (NodeCell<I,S>&);
        
+
+       // Define a simple concatenation of the two buffers.
+       string concatHashes(const string psl,
+			   const string psr) noexcept {
+	 if ( (psl.size() == 0) || (psr.size() == 0))
+	   return "";
+	 return (psl.size() == 0) ? \
+	         "|" + psr :        \
+	         (psr.size() == 0) ?  \
+	         "|" + psl : psl + "|" + psr;
+       }
+  
        // Computes the hash based on the children. If no right child
        // exists, reuse the left child's value
-       size_t computeHash(size_t buffer, NodeCell<I,S> *r) {
+       // Return value is in string format with the
+       // following convention: rightHash|leftHash|AncenstorHash
+       string computeHash(string &buffer, NodeCell<I,S> *r) {
 	 if (r == NULL)
-	   return 0;
+	   return "";
 
-	 const size_t leftHash = computeHash(buffer, r->sx);
-         const size_t rightHash = ( computeHash(buffer, r->dx) ? \
-	 			    computeHash(buffer, r->dx) : \
-	 			    leftHash );
 
- 	 buffer = leftHash + rightHash;
-	 
-	 if (r != NULL && buffer == 0)
-	   // case of tree only with root
+	 const string leftHash = computeHash(buffer, r->sx);
+	 const string rStr = computeHash(buffer, r->dx);
+	 const string rightHash = rStr != "" ? \
+				  rStr : leftHash;
+	 buffer = concatHashes(leftHash, rightHash);
+
+	 if (buffer == "")
 	   buffer = r->user->getHash();
-
-	 return hash<size_t>{} (buffer);
+	 else
+	   buffer = concatHashes(buffer, r->user->getHash());
+	 
+	 // this would retain the signature of each nodes
+	 //return buffer;
+	 
+	 // this version give a more compressed fingerprint.
+	 // But we would loose the specificity of which node
+	 // got currupted, eventually.
+	 return to_string(hash<string>{} (buffer));
        }
 
        // calculate the tree fingerprint as the Hash value
        // at the root
-       size_t fingerPrint() {
-	 size_t buffer;
+       string fingerPrint() {
+	 string buffer;
 	 return computeHash(buffer, root);
        }
 
@@ -319,9 +340,8 @@ bool HTreeClass<I,S>::insertNew (NodeCell<I,S> &n) {
 		
         insertnode (n, root);
 	
-	size_t buffer;
-	HashCell<time_t,size_t> tmp (clock(),
-				     computeHash (buffer, root));
+	HashCell<time_t,string> tmp (clock(),
+				     fingerPrint());
 	return rHash.insertNew(tmp);
 }
 
@@ -484,9 +504,8 @@ bool HTreeClass<I,S>::delNode (NodeCell<I,S> &n) {
 		
 	deletenode (n,root);
 	
-	size_t buffer;
-	HashCell<time_t,size_t> tmp (clock(),
-			     computeHash (buffer, root));
+	HashCell<time_t,string> tmp (clock(),
+				     fingerPrint());
 	return rHash.insertNew(tmp);
 } 
 
@@ -526,13 +545,15 @@ int main() {
 	  }
 
 	cout << "Added new nodes:" << t << "\n";
+	 
 /////////// Search and Deletion of old Nodes - Test Case
-        // test removing one node at the leaf
 	Student s2 ("pinco pallo");
 
 	NodeCell<int, pS> d (0,
 			    652,
 			    (pS) &s2);
+	
+        // test removing one node at the leaf
 	if ( !(t.delNode(d)) )
 	  return (1);   // failed test
         // check for integrity
@@ -591,7 +612,8 @@ int main() {
         cout << "Deleted old nodes:" << t << "\n";
 
 /////////// Simulating data corruption
-	NodeCell<int, pS> *ts = t.searchItem(d.changeIndex(202));
+	NodeCell<int, pS> *ts =
+	         t.searchItem(d.changeIndex(350));
 	
 	if ( ts ) {
 

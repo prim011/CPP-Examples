@@ -23,7 +23,7 @@ public:
   virtual string getName () = 0;
   virtual bool getPermit () = 0;
   virtual int getSerialN () = 0;
-  virtual size_t getHash () = 0;
+  virtual string getHash () = 0;
   virtual void commissionClass (size_t) = 0;
   
   // printing out method specific for this class
