@@ -6,5 +6,5 @@ class HashFunctions {
 public:
   virtual ~HashFunctions () = default;
 
-  virtual size_t formHash(size_t, LibAccess*) = 0;
+  virtual string formHash(size_t, LibAccess*) = 0;
 };

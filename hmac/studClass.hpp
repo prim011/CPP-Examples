@@ -25,7 +25,7 @@ class Student: private LibAccess {
   HashFunctions *pHash;
 
   // Custom specialization hash 
-  size_t formHash() {
+  string formHash() {
     return pHash->formHash(seed, (LibAccess*) this);
   }
  public:
@@ -48,7 +48,7 @@ class Student: private LibAccess {
   string getName () { return name; }
   bool getPermit () { return active; }
   int  getSerialN () { return serialNS; }
-  size_t getHash () { return formHash(); }
+  string getHash () { return formHash(); }
 
   void commissionClass (size_t k) {
     seed = k;
