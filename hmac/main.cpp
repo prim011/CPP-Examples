@@ -9,6 +9,13 @@
 
 using namespace std;
 
+// Use this option to enable full tracability of
+// potential data breach with granularity down to
+// the nodes level.
+// Othewise, undefine this option to give a more
+// compressed fingerprint, easier to read, but with
+// less granularity.
+#define FULL_DATABREACH_TRACEABILITY
 
 // index array used to tree node insertion.
 int index_array [] =
@@ -17,20 +24,20 @@ int index_array [] =
    600, 550, 548, 552, 650, 648, 352, 652
  };
 
-typedef LibAccess* pS;
-
-// this is the "supposedly" data base of university staff records
-// typically in a database
-pS staffRec [sizeof(index_array)/sizeof(int)];
-
 // Here is how the tree looks like in this example
 //              ___ 500___
-//             /          \
+// sx branch:  /          \  :dx branch
 //          300            600
 //         /   \          /    \
 //        200   350      550    650
 //       /  \   /  \     /  \   /  \
 //     118 202 348 352 548 552 648 652
+
+typedef LibAccess* pS;
+
+// this is the "supposedly" data base of university staff records
+// typically in a database
+pS staffRec [sizeof(index_array)/sizeof(int)];
 
 /**
  * @brief Node definition in the tree 
@@ -225,7 +232,7 @@ public:
        // Computes the hash based on the children. If no right child
        // exists, reuse the left child's value
        // Return value is in string format with the
-       // following convention: rightHash|leftHash|AncenstorHash
+       // following convention: rightHash|leftHash|CurrentNodeHash
        string computeHash(string &buffer, NodeCell<I,S> *r) {
 	 if (r == NULL)
 	   return "";
@@ -241,14 +248,39 @@ public:
 	   buffer = r->user->getHash();
 	 else
 	   buffer = concatHashes(buffer, r->user->getHash());
+
+ #ifdef FULL_DATABREACH_TRACEABILITY
+	 // This would retain the signature including the
+	 // information on each nodes in clear. Here is the
+	 // format:
+	 //
+	 //      <leftBranchHash>|<rightBranchHash>|<currentNodeHash>
+         //
+	 // The type is a string and the lenth varies according to
+	 // which HMAC function has been defined in the hmac.hpp.
+	 // In the external HMAC is controlled by:
+	 //      #define SHA256_HASH_SIZE 8
+	 // (when STD_HMAC is defined). Whereas on the std::hash<>
+	 // solution is given by the return size of size_t in the
+	 // standard library function (also fixed).
+	 // 
+	 // This option is to be prefered when checking on 
+	 // where excatly the data curruption occurred - and
+	 // in which node - is necessary. In fact, due to the
+	 // return structure it is possible to trace in which
+	 // branch the data breach occurred. The side effect is
+	 // the fingerprint's length
+	 return buffer;
 	 
-	 // this would retain the signature of each nodes
-	 //return buffer;
+#else  // FULL_DATABREACH_TRACEABILITY
 	 
-	 // this version give a more compressed fingerprint.
+	 // This version, instead, gives a more compressed fingerprint.
 	 // But we would loose the specificity of which node
-	 // got currupted, eventually.
+	 // got corrupted, eventually.
 	 return to_string(hash<string>{} (buffer));
+	 
+#endif // FULL_DATABREACH_TRACEABILITY
+       
        }
 
        // calculate the tree fingerprint as the Hash value
@@ -610,7 +642,6 @@ int main() {
 	  cout << " !! INTEGRITY COMPROMISED !! \n";
 
         cout << "Deleted old nodes:" << t << "\n";
-
 /////////// Simulating data corruption
 	NodeCell<int, pS> *ts =
 	         t.searchItem(d.changeIndex(350));
@@ -624,7 +655,7 @@ int main() {
 	       << *(ts->user) << endl;
 
 	  Student *ps4 = (Student*) ts->user;
-	  Student s3 ("test1");
+	  Student s3 ("Data Integrity Breach - Test");
 	  
 	  // Tampering data deliberately
 	  // using the overload of operator=
