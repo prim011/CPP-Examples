@@ -1,6 +1,6 @@
 # Quick Reference for Blockchain using HMAC
 
-This quick example code implements a possible reference for blockchain implementation, which is a Merkel tree with history.
+This quick example code implements a possible reference for blockchain implementation, which is a Merkel tree with history, using HMAC.
 
 The history has been saved in the form of a linked list, and each node in the list is created when certain actions - such as insert and delete - in the Merkel tree have been taken, with a timestamp of when those actions have occurred.
 
@@ -11,7 +11,7 @@ This example is an enhancement of the hashTree example which has been presented 
 
 In contrast with the example in the previous section in [blockchain](../blockchain/README.md), here we are not only interested in the _integrity of the data_ but also in the _data origin authentication_, as well as the tree history.
 
-From what we have seen in the past, the best candidate for the tree fingerprint is the tree hash itself. Therefore storing the variable to a concatenated list seems a good idea for memorizing the tree's history. But The other information to store - apart from a link to the successor node - is a timestamp when that vital tree structure operation did take place. We can think of only two of those operations: when inserting a new node and/or when removing an old node. 
+From what we have seen in the past, the best candidate for the tree fingerprint is the tree hash itself. Therefore storing the variable to a concatenated list seems a good idea for memorizing the tree's history. But The other information to store - apart from a link to the successor node - is a timestamp when vital tree structure operations did take place. We can think of only two of those operations: when inserting a new node and/or when removing an old node. 
 
 ## Data integrity vs Data Origin authentication
 
@@ -23,7 +23,7 @@ But why introducing this add-on concept and why do we need it?
 
 For a second, think of how we have achieved data integrity in the blockchain example: by using a hash function with a combination of fields coming from the NodeCell record, such as name and serial number.
 
-If we were to consider transmitting the tree information from point A (Alice) to point B (Bob) and assuming we were in Bob's shoes, we would not have any assurance that the data had come exactly from Alice. We could receive reassurance on the data integrity, but there is no reassurance on who is sending the data. Even without necessarily sending the message, we might want to encapsulate a signature from where the message is originally coming from. This can be further extended to the concept of digital signature, which has an additional attribute to the one we described: non-repudiation (meaning that whoever has digitally signed the message can not repudiate that action, because from the signature it is possible to trace the author/owner; there is a _strong_ association between data authenticated and identity of the author/owner). But without transgressing too much on the digital signature, in data authentication, we are happy if we have a _weak_ reassurance that the data is coming from a valid source.
+If we were to consider transmitting the tree information from point A (Alice) to point B (Bob) and assuming we were in Bob's shoes, we would not have any assurance that the data had come exactly from Alice. We could receive reassurance on the data integrity, but there is no reassurance on who is sending the data. Even without necessarily sending the message, we might want to encapsulate a signature from where the message is originally coming from. This can be further extended to the concept of digital signature, which has an additional attribute to the one we described: _non-repudiation_ (meaning that whoever has digitally signed the message can not repudiate that action, because from the signature it is possible to trace the author/owner; there is a _strong_ association between data authenticated and identity of the author/owner). But without transgressing too much on the digital signature, in data authentication, we are happy if we have a _weak_ reassurance that the data is coming from a valid source.
 
 For this, we have to introduce a completely new paradigm: the concept of keys. In particular data authentication uses symmetric keys and digital signature uses an asymmetric key mechanism in a public key infrastructure (PKI) environment.
 
@@ -40,7 +40,7 @@ A sensible owner of the symmetric key seems to be at the tree structure level. I
 
 This is just to illustrate the mechanism; in real life, keys are unlikely to be stored as clearly and plainly as in this example. They normally require hardware support, such as Hardware Security Modules (HSM).
 
-Nevertheless, special attention has been given not to share the value contained in the varaible `key` publicly outside the class. The use of `getKey()` member function is only private, so it can not be publically used. This approach has had some bearing on how the software has been organized and architected. In particular one public member fuction has been defined each time a new Node in the tree is created to commission the nodes itself without exposing the key value. 
+Nevertheless, special attention has been given not to share the value contained in the varaible `key` publicly outside the class. The use of `getKey()` member function is only private, so it can not be publically used. This approach has had some bearing on how the software has been organized and architected. In particular one public member fuction has been called each time a new Node in the tree is created to commission the nodes itself without exposing the key value. 
 
 	 NodeCell<I,S>* commissionObject (I i, pS &obj) {
 	   NodeCell<I,S> *p= new NodeCell<I,S> (getKey(), i, obj);
@@ -48,19 +48,19 @@ Nevertheless, special attention has been given not to share the value contained 
 	   return p;
 	 }
 
-This means commissioning the Nodes at the tree level and passing the key value to `LibAccess` abstarct class with the dedicated visrtual member class:
+This means commissioning the Nodes at the tree level and passing the key value to `LibAccess` abstarct class with the dedicated virtual member class:
 
 	 virtual void commissionClass (size_t) = 0;
 
-where `seed` is a protected variable; therefore, the `Student` and `Prof` derived classes inherit the variable; but it is not visible outside the classes. Each class then has their own implementation of the `commissionClass()` function which will in stall the value into `seed`.
+where `seed` is a protected variable; therefore, the `Student` and `Prof` derived classes inherit the variable; but it is not visible outside the classes. Each class then has their own implementation of the `commissionClass()` function which will install the value into `seed`.
 
-It is important to distiguish the creation of the class from the commitioning of it; hence the separation of the two activity which in `commissionObject()` happened immediately after; but that might not be the case necessarily.
+It is important to distiguish the creation of the class from the commissioning of it; hence the separation of the two activities. In the function `commissionObject()`, these two activities happen immediately after the other; but that might not be the case necessarily.
 
 
 
 ## How to solve the exercise
 
-The tree class is composed of three major information block
+The tree class is now composed of three major information block
 
 1. The tree nodes: with the LibAccess abstract class pointer, the index, and the pointers - left and right - to the children on the left and right
 
@@ -135,7 +135,11 @@ within the `HTreeClass`. In there the value coming from the implemented abstract
 - the fingerprint is different for each tree's node configuration
 - Given the **same** tree structure in two **different times**, its fingerprint has to coincide.
 
-In particular, we will prove both points in this exercise. The first one, while creating/building the tree from scratch, we will notice the fingerprint is always changing. The second point is demonstrated by inserting a leaf node, as last and then immediately removing it at the next action. The reader would agree that the tree node structure configuration is the same before the last leaf node is inserted and after the same node has been removed. So the expectation is that the tree's fingerprint remains the same, although two distinctive operations have been carried out which forced to recalculate the tree's fingerprint. See the output in this example:
+In particular, we will prove both points in this exercise. 
+
+The first one, while creating/building the tree from scratch, we will notice the fingerprint is always changing.
+
+The second point is demonstrated by inserting a leaf node, as last and then immediately removing it at the next action. The reader would agree that the tree node structure configuration is the same before and after the last leaf node has been inserted and successively removed. So the expectation is that the tree's fingerprint remains the same, although two distinctive operations have been carried out which forced to recalculate the tree's fingerprint. See the output in this example - demostrating both points -:
 
 
 	TREE PRINTOUT - root: 0x55c2d58fb320->548
@@ -167,8 +171,8 @@ This is all fine for checking the tree's integrity. But what about the history? 
 
 
 	...
-	HashCell<time_t,size_t> tmp (clock(),
-				     computeHash (buffer, root));
+	HashCell<time_t,string> tmp (clock(),
+				                 fingerPrint());
 	return rHash.insertNew(tmp);
 	}
 
@@ -182,12 +186,31 @@ There might be two possible ways to check that this is happening:
 1. changing the _name_ and/or the serial number, _serialNP/S_ for any element in the tree
 2. omitting the hash recalculation (the two lines above) after one of the two operations of inserting and/or deleting.
 
-In particular, we have tested the latter by omitting the hash recalculation from the delete function and verifying that the `integrityCheck()` function returns an error.
+We have tested both of these scenarios. The first one with a dedicated testcase at the end of the `main()` function simulating a data tampering ina  given node. In particual, it is possible not only to detect that the data tree structure has been tampered, but also be specific on which element has been tampered. See output example in here:
+
+
+	Searching for node: 
+		index: 350  	User name :pinco pallo	Serial Number: 15	active: Yes
+	Hash : ed8304b138c3358a	left: 0	right: 0
+	Tree's fingerprint before:	43548bdd14a6e0f4|042cde1be71d3fb5|7e6b4e23f74205e3|```840d2e177495731a```|07957a48051a9cff|556a214d303c24ca|556a214d303c24ca|823421da22b7e997|f16e0295dcec2d4a
+
+	Data before manipulation: 
+		User name :pinco pallo	Serial Number: 5	active: Yes
+	Hash : ```840d2e177495731a```
+
+	Data after manipulation: 
+		User name :Data Integrity Breach - Test	Serial Number: 16	active: Yes
+	Hash : ```fdaae4d17a96dfee```
+	Tree's fingerprint after:	43548bdd14a6e0f4|042cde1be71d3fb5|7e6b4e23f74205e3|```fdaae4d17a96dfee```|07957a48051a9cff|556a214d303c24ca|556a214d303c24ca|823421da22b7e997|f16e0295dcec2d4a
+	!! INTEGRITY COMPROMISED !! -- Test passed 
+
+
+The second point is proved by omitting the hash recalculation from the delete function and verifying that the `integrityCheck()` function returns an error.
 
 For reference, here is the implementation of the `integrityCheck()` function:
 
 	bool integrityCheck() {
-	  size_t buffer;
+	  string buffer;
 	  return ( computeHash(buffer, root) ==
 	           (rHash.findLast()->hashValue) );
 	}
@@ -207,10 +230,10 @@ and used as follows, in creating the digest:
 	hmac.hash("This is the Key", "This is the message", digest);
 
 In this experiment we have used our own definition using `rand()` and `srand()`, for the key generation and for the HMAC we use two different implemetation:
-- Internally generate
-- Coming externally from a dedicated library
+- Internally generated
+- Coming externally from a public library
 
-to witch between the two implemetation in the `CMakeList.txt` file toggle the STD_HMAC option to switch from one to the other (default is the external option).
+to switch between the two implemetation in the `CMakeList.txt` file toggle the `STD_HMAC` option to switch from one to the other (default is the external option).
 
 ## The use of the Binary tree and the Linked list in a template format 
 
@@ -229,7 +252,7 @@ Please refer to the treeTemplate example for more information about the binary t
 
 There is also a quick example on `main()` function on how to use the `TreeClass<>` object, a small exercise on including nodes, searching dedicated nodes and removing them. The same code is also used as a regression test in the `.yml` file for the Continuous Integration (CI). This is why the `main()` function returns 0 or 1 according to the successful, or unsuccessful, completion of the tasks.
 
-Lastly, the implementation of the linked list as a template, it makes simple to generalise the node structure with `time_t` and `size_t`, for the timestamp and the hash respectively. 
+Lastly, the implementation of the linked list as a template, it makes simple to generalise the node structure with `time_t` and `string`, for the timestamp and the hash respectively. 
 
 The code has been written for C++11, but there is no clear dependency and can be compiled on other toolchains, but we have not tested it.
 

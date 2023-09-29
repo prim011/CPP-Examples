@@ -30,7 +30,6 @@ public:
     const string str_data = p->getName() + to_string(p->getSerialN());
     const string str_key = to_string(seed);
     vector<uint8_t> out(SHA256_HASH_SIZE);
-    size_t tmp{0};
     stringstream ss_result;
 
     // Call hmac-sha256 function
@@ -43,11 +42,6 @@ public:
       ss_result << std::hex << std::setfill('0') << std::setw(2) << (int)x;
     }
 
-    ss_result >> tmp;
-    
-#ifdef _HMAC_DEBUG_    
-    cout << "HMAC: " << tmp << endl;
-#endif
     return ss_result.str();
 
 #else // STD_HMAC
