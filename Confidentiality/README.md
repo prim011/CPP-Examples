@@ -100,7 +100,7 @@ The tree class is now composed of four major information block
 
 3. The symmetric key for the HMAC, created when the tree data structure has been created, and passed down to the rest of the NodeCell
 
-4. The simmetric key for AES encryption/decryption _at-rest_ done at the node level
+4. The simmetric key for AES encryption/decryption _at-rest_ done at the node level[^4]
 
 
 ### The tree nodes
@@ -159,6 +159,8 @@ Another advantage gained is that we could define which Hash function any given c
 	}
 
 The first one is used in our example here. The second one could be used in case we want to define another Hash function for the future, for example, one based on Post-Quantum Cryptography (PQC) algorithms.
+
+To be noted that a similar Software architecture could have been used for the AES encryption and decryption functionality. But in this instance we prefered to adopt a more pragmatic approach.
 
 ### The Tree fingerprints
 
@@ -260,7 +262,7 @@ For reference, here is the implementation of the `integrityCheck()` function:
 ### The symmetric key for the HMAC
 As we discussed in the previous section, the key's owner has to be necessarily the tree structure. Therefore an additional variable has been declared which will be created at the Tree constructors and passed down to the lover level at the abstract class `LibAccess` to be used in the HMAC function for their class. 
 
-Had we wanted to use the crypto++[^1], the HMAC could have looked like the following definition:
+Had we wanted to use the crypto++[^5], the HMAC could have looked like the following definition:
 
 	Digest<HMac<SHA256>>      digest;
 	HMAC< SHA256 >            hmac;
@@ -269,7 +271,7 @@ and used as follows, in creating the digest:
 
 	hmac.hash("This is the Key", "This is the message", digest);
 
-In this experiment we have used our own definition using `rand()` and `srand()`, for the key generation and for the HMAC we use two different implemetation:
+In this experiment we have used our own definition using `rand()` and `srand()`, for the HMAC key generation and for the HMAC we use two different implemetation:
 - Internally generated
 - Coming externally from a public library
 
@@ -277,7 +279,7 @@ to switch between the two implemetation in the `CMakeList.txt` file toggle the `
 
 ## The use of the Binary tree and the Linked list in a template format 
 
-It makes it easy to reuse the work done in other exercises for this specific example. The format to accept any type of node structure makes the extension to the abstract class very easy.  The user can define the node completely independently at run time. The only constraint is related to the implicit need for the _index_ field to satisfy some order, typically with the overload of the '< > = ' operators. This index is typically different from the serial number of the users, as the index is a control field for the binary tree and the serial number can be used for checking the user identity, instead.
+It makes it easy to reuse the work done in other exercises for this specific example. The format to accept any type of node structure makes the extension to the abstract class very easy[^6].  The user can define the node completely independently at run time. The only constraint is related to the implicit need for the _index_ field to satisfy some order, typically with the overload of the '< > = ' operators. This index is typically different from the serial number of the users, as the index is a control field for the binary tree and the serial number can be used for checking the user identity, instead.
 
 Only one attention: since an abstract class can not be instantiated, we have used _typedef_ to include a pointer to the abstract class as the information stored in the nodes tree. This is predicated on the fact that either the Professor or the Student records are created upfront and then we use the pointer to the abstract class for each of those in the tree's nodes. This is in line with a real case example where, normally the requirement to store information about Students and Professors is stored differently than from those who need to manage access to the University Library. Thanks to the Abstract class concept in C++ it is possible to share only the information needed for the two environments. It is a sort of interface that those two classes have to the Library to access the building. In fact, in C++, an interface is usually defined as a virtual class in which *all* its member functions/methods are virtual. Those virtual methods are defined as the minimum that the _user_ -in this context the University Library - would need to manage access to the building.
 
@@ -317,7 +319,7 @@ Output is the executable `myBlockchainExample` generated after the build.
 [^1]: See Wikipedia at this [link](https://en.wikipedia.org/wiki/Authenticated_encryption) or this good reference: []()
 [^2]: Note that the encryption operation and the HMAC operation will need to be computed using _different_ cryptographic keys. This is becuase they are two separate cryptographic operations, providing different security services. Using different keys follows the best practises principles of keys separations  
 [^3]: Thanks to [Wikipedia](https://en.wikipedia.org/wiki/Authenticated_encryption)
+[^4]: It has to be noted the differnece between the AES symmetric key and the _initialization vector (iv)_ which comes into the initialization of the ctx structure. The Key is the symmetic key used in the security service, wehreas the _iv_ is and optimization factor for the AES algorithim. This last one is fine to be controlled locally at the node level.
 
-
-[^1]: see link in [here](https://www.cryptopp.com/wiki/HMAC) and [here](https://www.cryptopp.com/docs/ref/class_h_m_a_c.html)
-[^2]: The tree structure relies on this abstract implementation to get the hash of the leaf nodes in the markel tree implementation and use them to combine and form that unique fingerprint which is specific to the tree structure, as we will see later in the next chapter
+[^5]: see link in [here](https://www.cryptopp.com/wiki/HMAC) and [here](https://www.cryptopp.com/docs/ref/class_h_m_a_c.html)
+[^6]: The tree structure relies on this abstract implementation to get the hash of the leaf nodes in the markel tree implementation and use them to combine and form that unique fingerprint which is specific to the tree structure, as we will see later in the next chapter

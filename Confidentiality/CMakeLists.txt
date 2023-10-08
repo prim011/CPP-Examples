@@ -28,6 +28,7 @@ endif()
 
 if (AES_ENCRYPT)
   # instruct to use proper #ifdef
+  option(AES256 "select AES256 option" TRUE)
   add_compile_definitions(AES_ENCRYPT)
 endif()
 
@@ -56,3 +57,4 @@ add_test(NAME ConfTest
             COMMAND myConfExample)
 unset(STD_HMAC CACHE)
 unset(AES_ENCRYPT CACHE)
+unset(AES256 CACHE)
