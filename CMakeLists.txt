@@ -17,6 +17,7 @@ add_subdirectory(abstClass)
 add_subdirectory(hashTree)
 add_subdirectory(blockchain)
 add_subdirectory(hmac)
+add_subdirectory(Confidentiality)
 
 enable_testing()
 
