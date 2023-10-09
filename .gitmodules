@@ -1,4 +1,0 @@
-[submodule "Confidentiality/AES"]
-	path = Confidentiality/AES
-	url = https://github.com/kokke/tiny-AES-c.git
-	branch = master

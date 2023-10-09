@@ -570,7 +570,8 @@ int main() {
 	for (int i=1; i < (sizeof(index_array)/sizeof(int)); i++)
 	  {
 	    // I am also building the staff Records
-	    staffRec[i] = (LibAccess*) new Student("pinco");
+	    staffRec[i] = (LibAccess*) new Student("pinco pallo " +
+						   to_string(i));
 
 	    // ... only here is pertinent for the Uni Library
 	    if ( !(t.insertNew(*(t.commissionObject
