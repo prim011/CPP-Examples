@@ -13,7 +13,8 @@ The folders beneath this level are the following:
 - abstClass: an example of an abstract class using the template binary tree previously defined. See README file in [here](/abstClass/README.md)
 - hashTree: an example of the hash/Merkel tree using the _abstClass_ and _treeClass_ as starting point. See README file in [here](/hashTree/README.md)
 - Blockchain: an example of how the Merkel tree can be used for data integrity, traceability using  a hashbased fingerprint for data integrity and the history of the tree saved into a linked list. In the following example also the concept of message authentication will be integrated on the same data structure. See this [link](/blockchain/README.md) for more details on this example.
-- Blockchain with HMAC: an extention of the above example, introducing symmetric keys with **HMAC** or **H**ash-based **M**essage **A**uthentication **C**ode[^1] for generating the fingerprint. See more details in [here](/hmac/README.md).
+- Blockchain with confidentiality built-in (that is Authenticated Encryption, or simply AE): the message authentication is coming from HMAC, an extention of the above example, introducing symmetric keys with **HMAC** or **H**ash-based **M**essage **A**uthentication **C**ode[^1] for generating the fingerprint. See more details in [here](/hmac/README.md). The encryption security service functionality is implemented via AES, with another dedicated symmetric key. The AES and HMAC algorithms have been imported from standard external libraries.
+See more information in [here](/Confidentiality/README.md)
 
 ## Compiling locally
 Assuming GCC v.11 and cmake already installed
