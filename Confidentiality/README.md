@@ -28,6 +28,7 @@ Here are the specific enhancement in this excercise:
 ## Addtional enhancements for further excercises
 
 Additional excercises might be considered in respect of further developing/experiment the security in the the data structure. But they are left for future efforts. Those enhancements may include the following:
+
 2. _Introduction of the concept related to authenticity and non-repudiation:_
    - The nodes have been digitally signed at creation. 
    - Creation and loading of the tree has been separated from the `main()` 
@@ -40,14 +41,14 @@ Additional excercises might be considered in respect of further developing/exper
    nodes thier digital signature. It simulates what in _real life_ would be a 
    _strong_ integrity check over authenticity and authentication.
 4. _Introduction of the concept of Authority:_
-   - One a user has been authenticated for loading/accessing the tree 
+   - Once a user has been authenticated for loading/accessing the tree 
    information, the next step is understanding the authority for that user to 
    carry out operations such as insertion/deletion and information printout.
 
 
 ## Problem to solve for this excersice 
 
-We want to implement _Autenticated Encryption_ (AE) on top for the excercise we have developed on the [HMAC excercise](../hmac). We have seen as in the HMAC excercise the HMAC is guarantying Message Athentication and Data integrity, but the data have been manipulated always in clear (i.e. without encryption). Now we want to introduce an additional layer of security: data encryption at-rest, at leaset for some node's fields in the data structure.
+We want to implement _Autenticated Encryption_ (AE) on top for the excercise we have developed on the [HMAC excercise](../hmac). As we have seen as in the HMAC excercise, the HMAC cryptographic primitive is guarantying Message Athentication and Data integrity, but the data have been manipulated always in clear (i.e. without encryption). Now we want to introduce an additional layer of security: data encryption at-rest, at leaset for some node's fields in the data structure.
 
 ## Data Origin Authentication vs Authenticated Encryption
 
