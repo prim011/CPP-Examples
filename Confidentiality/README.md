@@ -6,41 +6,50 @@ The history has been saved in the form of a linked list within the Merkel tree, 
 
 This example is an enhancement of the HMAC example which has been presented in other sections. See this [link](../hamc/README.md) for more information on that example.
 
-Here are the specific enhancement in this excercise:
+Here are the specific enhancements in this exercise:
 1. _Introduction of Confidentiality:_ 
-   - The individual nodes content has fully encrypted at-rest. 
+   - The individual node's content is fully encrypted at-rest. 
    In prticualar HMAC with encryption will be used as true confidentiality can 
    not be achieved only via encryption without message data authentication, 
    given by the HMAC. This is also called _authenticated encryption_. In 
-   particular we will use two separate security services for encrypting and 
+   particular, we will use two separate security services for encrypting and 
    HMAC (reuse of the previous example). We will perform in this order 
    **Enrypt-then-MAC**[^1]:
 	   - The Nodes are encrypted.
 	   - The HMAC is computed on the combination of the ciphertext and the 
 	   associated data 
-	   - The chiphertext the associated data and the HMAC are used/sent 
+	   - The ciphertext the associated data and the HMAC are used/sent 
    
-   On the user/receiver front the operations are relatively simple:
-	   - Check the HMAC on the chipertext. If the check fails, the 
-	   user/receiver will reject the message without the need of decrypting it
+   On the user/receiver front, the operations are relatively simple:
+	   - Check the HMAC on the ciphertext. If the check fails, the 
+	   user/receiver will reject the message without the need to decrypt it
 	   - Decrypt the message[^2] 
 
-## Addtional enhancements for further excercises
+## Additional enhancements for further exercises
 
-Additional excercises might be considered in respect of further developing/experiment the security in the the data structure. But they are left for future efforts. Those enhancements may include the following:
+Up until now we have explored three important security services:
 
-2. _Introduction of the concept related to authenticity and non-repudiation:_
+1. data integrity
+2. data authentication 
+3. confidentiality
+
+Additional excercises might be considered in respect of further developing/experiment the other two left security services:
+
+4. _Introduction of the concept related to authenticity and non-repudiation:_
    - The nodes have been digitally signed at creation. 
    - Creation and loading of the tree has been separated from the `main()` 
    function and from the testing activity
    - The tree creation will be done as a separate procedure after the 
    initialization 
-3. _Introduction of the concept of Authentication:_
+5. _Introduction of the concept of Authentication:_
    - The Loading of the three information is simulated with the `checkSignature()`
    operation which verify the identy of the requestor and runs through all the
    nodes thier digital signature. It simulates what in _real life_ would be a 
    _strong_ integrity check over authenticity and authentication.
-4. _Introduction of the concept of Authority:_
+
+Finally we could exercise the following scenario:
+
+ _Introduction of the concept of Authority:_
    - Once a user has been authenticated for loading/accessing the tree 
    information, the next step is understanding the authority for that user to 
    carry out operations such as insertion/deletion and information printout.
