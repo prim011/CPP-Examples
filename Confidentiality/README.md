@@ -9,12 +9,12 @@ This example is an enhancement of the HMAC example which has been presented in o
 Here are the specific enhancements in this exercise:
 1. _Introduction of Confidentiality:_ 
    - The individual node's content is fully encrypted at-rest. 
-   In prticualar HMAC with encryption will be used as true confidentiality can 
+   In particular, HMAC with encryption will be used as true confidentiality can 
    not be achieved only via encryption without message data authentication, 
    given by the HMAC. This is also called _authenticated encryption_. In 
    particular, we will use two separate security services for encrypting and 
    HMAC (reuse of the previous example). We will perform in this order 
-   **Enrypt-then-MAC**[^1]:
+   **Encrypt-then-MAC**[^1]:
 	   - The Nodes are encrypted.
 	   - The HMAC is computed on the combination of the ciphertext and the 
 	   associated data 
@@ -27,13 +27,13 @@ Here are the specific enhancements in this exercise:
 
 ## Additional enhancements for further exercises
 
-Up until now we have explored three important security services:
+Up until now, we have explored three important security services:
 
 1. data integrity
 2. data authentication 
 3. confidentiality
 
-Additional excercises might be considered in respect of further developing/experiment the other two left security services:
+Additional exercises might be considered in respect of further developing/experimenting with the other two left security services:
 
 4. _Introduction of the concept related to authenticity and non-repudiation:_
    - The nodes have been digitally signed at creation. 
@@ -42,31 +42,29 @@ Additional excercises might be considered in respect of further developing/exper
    - The tree creation will be done as a separate procedure after the 
    initialization 
 5. _Introduction of the concept of (Entity) Authentication:_
-   - The Loading of the three information is simulated with the `checkSignature()`
-   operation which verify the identy of the requestor and runs through all the
-   nodes thier digital signature. It simulates what in _real life_ would be a 
-   _strong_ **integrity** check over authenticity and authentication. 
-   - In reality, to accomplish full _Entity Authentication_, we would also need the concept of **freshness**: a prove that the entity in live and engaging with the session now. Among all the other security services, this the only one which is used to enable access of resources in a cryptosystem
+   - The Loading of the three information is gated by a digital signature validation
+   which verifies the **identy** of the requestor before accessing the tree information. It simulates what in _real life_ would be a _strong_ identity check over authenticity and authentication. 
+   - In reality, to accomplish full _Entity Authentication_, we would also need the concept of **freshness**: a prove that the entity is live and engaging with the session, right now. Among all the other security services, this is the only one which is used to enable access to resources in a cryptosystem
 
-Finally we could exercise the following scenario:
+Finally, we could exercise the following scenario:
 
  _Introduction of the concept of Authority:_
    - Once a user has been authenticated for loading/accessing the tree 
-   information, the next step is understanding the authority for that user to 
+   information, the next step is understanding the authority of that user to 
    carry out operations such as insertion/deletion and information printout.
 
 
-## Problem to solve for this excersice 
+## Problem to solve for this exercise 
 
-We want to implement _Autenticated Encryption_ (AE) on top for the excercise we have developed on the [HMAC excercise](../hmac). As we have seen as in the HMAC excercise, the HMAC cryptographic primitive is guarantying Message Athentication and Data integrity, but the data have been manipulated always in clear (i.e. without encryption). Now we want to introduce an additional layer of security: data encryption at-rest, at leaset for some node's fields in the data structure.
+We want to implement _Autenticated Encryption_ (AE) on top of the exercise we have developed on the [HMAC exercise](../hmac). As we have seen in the HMAC exercise, the HMAC cryptographic primitive guarantees Message authentication and Data integrity, but the data have been manipulated always in clear (i.e. without encryption). Now we want to introduce an additional layer of security: data encryption at-rest, at least for some node's fields in the data structure.
 
 ## Data Origin Authentication vs Authenticated Encryption
 
-In the [HMAC README file](../hmac/README.md) we have learned the difference between data integrity and data autherication and in particular how the latter include the former. Now we want to include an additional level of security: encryption and decryption. In our example we will use two different security services for the encryption/decryption and the HMAC operation (i.e. the message authentication). In particular we will used the concept of **Encypt-then-MAC/Authenticate** or simply **EtM**. The concept is brilliantly enlighted by the self explanatory image[^3]
+In the [HMAC README file](../hmac/README.md) we have learned the difference between data integrity and data authentication and in particular how the latter includes the former. Now we want to include an additional level of security: encryption and decryption. In our example, we will use two different security services for the encryption/decryption and the HMAC operation (i.e. the message authentication). In particular, we will use the concept of **Encypt-then-MAC/Authenticate** or simply **EtM**. The concept is brilliantly enlighted by the self-explanatory image[^3]
 
 ![Example of Encryption-then-Authenticate (credits to Wikipedia)](./resources/EtM.png)
 
-You might have noticed the use of two separate keys for the distinctive security services, one associated with encryption and the other one with authentication. This is a best-practice in security to have individual keys for separate security services. Although, there are algorithms that are capable to absolve the encryption and the authentication security services all in one security services. In that context it might make perfect sense to use only one key. In our case, though, we have to used two separete keys and those two keys is better to be separated. We will see later, how this will include an extra layer of complexity which will be solved with another key generated in a similar way like the previous key. They are two independent and separate keys, though.
+You might have noticed the use of two separate keys for the distinctive security services, one associated with encryption and the other one with authentication. This is a best security practice to have individual keys for separate security services. However, some algorithms are capable of absolving the encryption and the authentication security services all in one security primitive. In that context, it might make perfect sense to use only one key. In our case, though, we have to use two separate keys and those two keys are better to be separated. We will see later, how this will include an extra layer of complexity which will be solved with another key generated similarly to the previous key. They are two independent and separate keys, though.
 
 ### Symmetric Key and ownership
 A sensible owner of the symmetric keys seems to be at the tree structure level. It would not make too much sense to bure the keys into the node level as they are not the owners. But this decision comes with some redesign which will be addressed in the next section. Key generation can be assisted with the following Pseudo-Random Number Generation (PRNG) as follow:
@@ -79,7 +77,7 @@ A sensible owner of the symmetric keys seems to be at the tree structure level. 
 
 This is just to illustrate the mechanism; in real life, keys are unlikely to be stored as clearly and plainly as in this example. They normally require hardware support, such as Hardware Security Modules (HSM).
 
-Nevertheless, special attention has been given not to share the value contained in the varaible `key` publicly outside the class. The use of `getKey()` and `getAESKey()` member functions are only private, so it can not be publically used. This approach has had some bearing on how the software has been organized and architected. In particular one public member fuction has been called each time a new Node in the tree is created to commission the nodes itself without exposing the key value. 
+Nevertheless, special attention has been given not to share the value contained in the variable `key` publicly outside the class. The use of `getKey()` and `getAESKey()` member functions is only private, so it can not be publically used. This approach has had some bearing on how the software has been organized and architected. In particular, one public member function has been called each time a new Node in the tree is created to commission the node itself without exposing the key value. 
 
        NodeCell<I,S>* commissionObject (I i, pS &obj) {
 		   NodeCell<I,S> *p= new NodeCell<I,S> (getKey(),
@@ -91,13 +89,13 @@ Nevertheless, special attention has been given not to share the value contained 
 	  	   return p;
        }
 
-This means commissioning the Nodes at the tree level and passing the keys value to `LibAccess` abstarct class with the dedicated virtual member class:
+This means commissioning the Nodes at the tree level and passing the key value to `LibAccess` abstract class with the dedicated virtual member class:
 
 	 virtual void commissionClass (size_t, string) = 0;
 
-where `seed` and `aes_key` are protected variables; therefore, the `Student` and `Prof` derived classes inherit the variables; but it is not visible outside the classes. Each class then has their own implementation of the `commissionClass()` function which will install the value into `seed` and `aes_key`, respectively.
+where `seed` and `aes_key` are protected variables; therefore, the `Student` and `Prof` derived classes inherit the variables; but it is not visible outside the classes. Each class then has their implementation of the `commissionClass()` function which will install the value into `seed` and `aes_key`, respectively.
 
-It is important to distiguish the creation of the class from the commissioning of it; hence the separation of the two activities. In the function `commissionObject()`, these two activities happen immediately after the other; but that might not be the case necessarily.
+It is important to distinguish the creation of the class from the commissioning of it; hence the separation of the two activities. In the function `commissionObject()`, these two activities happen immediately after the other; but that might not be the case necessarily.
 
 
 
@@ -111,15 +109,15 @@ The tree class is now composed of four major information block
 
 3. The symmetric key for the HMAC, created when the tree data structure has been created, and passed down to the rest of the NodeCell
 
-4. The simmetric key for AES encryption/decryption _at-rest_ done at the node level[^4]
+4. The symmetric key for AES encryption/decryption _at-rest_ done at the node level[^4]
 
 
 ### The tree nodes
 
-The abstract class described in _libUsers.hpp_ has been taken from previous examples and offers the advantages of abstracting two other classes - Students and Profs - which encapsulate a specific family of Hash Funtions: `HMAC_SH3`. The `HashFunctions` abstract class represents the whole family of hash funtions, from which specific Hash function implementations may be derived. In this example, the low-level function implementing the virtual method is relatively simple in the `HMAC_SH3` derived class and takes two fields, the _key_ coming from the tree structure and a pointer to the node (in the abstract form of `LibAccess`[2]). This last parameter will allow to reach _index_ and _name_, which are used as input to the Hash256 (SHA-3) standard template library function. Furthermore, the  AES encryption at-rest is switched on and off thanks to the compilation function in the `CMakeList.txt` as follow:
+The abstract class described in _libUsers.hpp_ has been taken from previous examples and offers the advantages of abstracting two other classes - Students and Profs - which encapsulate a specific family of Hash Functions: `HMAC_SH3`. The `HashFunctions` abstract class represents the whole family of hash functions, from which specific Hash function implementations may be derived. In this example, the low-level function implementing the virtual method is relatively simple in the `HMAC_SH3` derived class and takes two fields, the _key_ coming from the tree structure and a pointer to the node (in the abstract form of `LibAccess`[2]). This last parameter will allow to reach _index_ and _name_, which are used as input to the Hash256 (SHA-3) standard template library function. Furthermore, the  AES encryption at-rest is switched on and off thanks to the compilation function in the `CMakeList.txt` as follows:
 
 ```
-   # Define AES_ENCRYPT to inclde symmetric encryption and
+   # Define AES_ENCRYPT to include symmetric encryption and
    # decryption of data/nodes at-rest
    option(AES_ENCRYPT "Include Encryption and Decryption" TRUE)
 ```
@@ -171,7 +169,7 @@ Another advantage gained is that we could define which Hash function any given c
 
 The first one is used in our example here. The second one could be used in case we want to define another Hash function for the future, for example, one based on Post-Quantum Cryptography (PQC) algorithms.
 
-To be noted that a similar Software architecture could have been used for the AES encryption and decryption functionality. But in this instance we prefered to adopt a more pragmatic approach.
+It is to be noted that a similar Software architecture could have been used for the AES encryption and decryption functionality. But in this instance, we preferred to adopt a more pragmatic approach.
 
 ### The Tree fingerprints
 
@@ -192,7 +190,7 @@ In particular, we will prove both points in this exercise.
 
 The first one, while creating/building the tree from scratch, we will notice the fingerprint is always changing.
 
-The second point is demonstrated by inserting a leaf node, as last and then immediately removing it at the next action. The reader would agree that the tree node structure configuration is the same before and after the last leaf node has been inserted and successively removed. So the expectation is that the tree's fingerprint remains the same, although two distinctive operations have been carried out which forced to recalculate the tree's fingerprint. See the output in this example - demostrating both points -:
+The second point is demonstrated by inserting a leaf node, as last and then immediately removing it at the next action. The reader would agree that the tree node structure configuration is the same before and after the last leaf node has been inserted and successively removed. So the expectation is that the tree's fingerprint remains the same, although two distinctive operations have been carried out which forced recalculating the tree's fingerprint. See the output in this example - demonstrating both points -:
 
 
 	TREE PRINTOUT - root: 0x55c2d58fb320->548
@@ -232,14 +230,14 @@ This is all fine for checking the tree's integrity. But what about the history? 
 
 These lines will make sure that the tree's hash/fingerprint is recalculated - in the first line -, and it has been used to increment the _history_ linked list which is part of the tree private control structure/variable `rHash`  
   
-Furthermore, a service route to check the tree integrity has been introduced to check anywhere at any time that the tree integrity is preserved. That function recalculates the hash tree in that moment and checks with the latest element in the linked list, which should be the most current event that happened. If the two values are different we can consistently say that the tree's data integrity has been compromised.
+Furthermore, a service route to check the tree integrity has been introduced to check anywhere at any time that the tree integrity is preserved. That function recalculates the hash tree at that moment and checks with the latest element in the linked list, which should be the most current event that happened. If the two values are different we can consistently say that the tree's data integrity has been compromised.
 
 There might be two possible ways to check that this is happening:
 
 1. changing the _name_ and/or the serial number, _serialNP/S_ for any element in the tree
 2. omitting the hash recalculation (the two lines above) after one of the two operations of inserting and/or deleting.
 
-We have tested both of these scenarios. The first one with a dedicated testcase at the end of the `main()` function simulating a data tampering ina  given node. In particual, it is possible not only to detect that the data tree structure has been tampered, but also be specific on which element has been tampered. See output example in here:
+We have tested both of these scenarios. The first one with a dedicated test case at the end of the `main()` function simulating data tampering in a given node. In particular, it is possible not only to detect that the data tree structure has been tampered but also to be specific on which element has been tampered. See the output example here:
 
 
 	Searching for node: 
@@ -282,11 +280,11 @@ and used as follows, in creating the digest:
 
 	hmac.hash("This is the Key", "This is the message", digest);
 
-In this experiment we have used our own definition using `rand()` and `srand()`, for the HMAC key generation and for the HMAC we use two different implemetation:
+In this experiment, we have used our definition using `rand()` and `srand()`, for the HMAC key generation and for the HMAC we use two different implementations:
 - Internally generated
 - Coming externally from a public library
 
-to switch between the two implemetation in the `CMakeList.txt` file toggle the `STD_HMAC` option to switch from one to the other (default is the external option).
+to switch between the two implementations in the `CMakeList.txt` file toggle the `STD_HMAC` option to switch from one to the other (default is the external option).
 
 ## The use of the Binary tree and the Linked list in a template format 
 
@@ -328,9 +326,9 @@ Output is the executable `myBlockchainExample` generated after the build.
 
 
 [^1]: See Wikipedia at this [link](https://en.wikipedia.org/wiki/Authenticated_encryption) or this good reference: []()
-[^2]: Note that the encryption operation and the HMAC operation will need to be computed using _different_ cryptographic keys. This is becuase they are two separate cryptographic operations, providing different security services. Using different keys follows the best practises principles of keys separations  
+[^2]: Note that the encryption operation and the HMAC operation will need to be computed using _different_ cryptographic keys. This is because they are two separate cryptographic operations, providing different security services. Using different keys follows the best practice principles of key separation  
 [^3]: Thanks to [Wikipedia](https://en.wikipedia.org/wiki/Authenticated_encryption)
-[^4]: It has to be noted the differnece between the AES symmetric key and the _initialization vector (iv)_ which comes into the initialization of the ctx structure. The Key is the symmetic key used in the security service, wehreas the _iv_ is and optimization factor for the AES algorithim. This last one is fine to be controlled locally at the node level.
+[^4]: It has to be noted the difference between the AES symmetric key and the _initialization vector (iv)_ which comes into the initialization of the ctx structure. The Key is the symmetric key used in the security service, whereas the _iv_ is an optimization factor for the AES algorithm. This last one is fine to be controlled locally at the node level.
 
 [^5]: see link in [here](https://www.cryptopp.com/wiki/HMAC) and [here](https://www.cryptopp.com/docs/ref/class_h_m_a_c.html)
 [^6]: The tree structure relies on this abstract implementation to get the hash of the leaf nodes in the markel tree implementation and use them to combine and form that unique fingerprint which is specific to the tree structure, as we will see later in the next chapter
