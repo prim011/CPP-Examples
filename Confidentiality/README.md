@@ -45,7 +45,8 @@ Additional excercises might be considered in respect of further developing/exper
    - The Loading of the three information is simulated with the `checkSignature()`
    operation which verify the identy of the requestor and runs through all the
    nodes thier digital signature. It simulates what in _real life_ would be a 
-   _strong_ integrity check over authenticity and authentication. In reality, to accomplish full _Entity Authentication_, we would also need the concept of freshness: a prove that the entity in live and engaging with the session now. Among all the other security services, this the only one which is used to enable access of resources in a cryptosystem
+   _strong_ **integrity** check over authenticity and authentication. 
+   - In reality, to accomplish full _Entity Authentication_, we would also need the concept of **freshness**: a prove that the entity in live and engaging with the session now. Among all the other security services, this the only one which is used to enable access of resources in a cryptosystem
 
 Finally we could exercise the following scenario:
 
