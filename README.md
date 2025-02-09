@@ -1,11 +1,9 @@
-# Quick Reference for some C++ Example Classes
+# Project Structure
+-  main.cpp: Contains the exercise development.
+- CMakeLists.txt: Instructions on how to compile with CMake under C++11.
+- README.md: Short description of the exercise and how to compile.
 
-These small code samples are composed of different C++ class topics of interest which have been organized by different folders. The folders contain a very simple structure, normally as follows:
-- 	main.cpp file: containing the exercise development
-- 	CMakeLists.txt: containing the instructions on how to compile with cmake under C++11
--	README.md: short description in marked-up file to describe the exercise and how to compile
-
-## Exercises 
+# Exercises
 The folders beneath this level are the following:
 - 	listExample	(single linked list structure, unordered). See README file in [here](/listExample/README.md)
 -	listTemplate	(same as before, but using template in C++). See README file in [here](/listTemplate/README.md)
